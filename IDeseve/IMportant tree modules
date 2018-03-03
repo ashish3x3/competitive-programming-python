@@ -1,0 +1,13 @@
+
+
+private int getLevel(Node root, Node a, int currLevel) {
+        if (root == null)
+            return 0;
+        if (root == a)
+            return currLevel;
+        int level = getLevel(root.left, a, currLevel + 1);
+        if (level != 0) {
+            return level;
+        } else
+            return getLevel(root.right, a, currLevel + 1);
+    }

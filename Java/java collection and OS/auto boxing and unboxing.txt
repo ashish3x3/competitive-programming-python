@@ -1,0 +1,15 @@
+Auto boxing refers to an implicit call to the constructor and auto unboxing refers to an implicit call to the *value() method. 
+
+Therefore, a new wrapper object can be created by specifying the value to be wrapped just as we would do for a primitive data type variable. Also, the value can be retrieved and used in a simple way by specifying the object name. Look at the following code:
+
+Integer intObject = 34;
+int x=intObject;
+int x = intObject + 7;
+
+The above statements are equivalent to the following set of statements
+
+Integer intObject = new Integer (34);
+int x = intObject.intValue();
+int x = intObject .intValue()+ 7;
+
+Similarly, auto boxing and auto boxing apply to other wrapper classes also. 

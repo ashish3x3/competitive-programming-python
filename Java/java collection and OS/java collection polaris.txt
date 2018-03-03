@@ -1,0 +1,43 @@
+Collection methods can take only objects as arguments and not primitives. 
+
+Iterator takes the place of Enumeration in the Java collections framework. 
+ 
+ 
+
+ Both are a form of traversing mechanism on collections. We say that Iterator  has iterate has remove() to remove elements from the underlying collection during the iteration and  enumeration is just read only, also Iterator can traverse bi directionally using List Iterator whereas Enumeration can  only traverse in forward direction.
+
+boolean hasNext()
+Returns true if the iteration has more elements
+
+Object next()
+Returns next element in the iteration
+
+void remove()
+Removes the current element from the underlying Collection
+
+To sort the elements of a String array one can use the sort method of java.util.Arrays.
+ For String instances in an ArrayList, you can sort them with the sort method of the java.util.Collections class.
+
+
+
+But to sort for eg instances of  custom ( user defined class )  use  Comparable interface of java.lang package or
+ the Comparator Interface of  java.util package.
+
+Collections.synchronizedMap(new HashMap(…)); 
+
+Collections.synchronizedSet(new HashSet(...)); 
+);
+Collections.synchronizedList(new ArrayList(...)); 
+
+List list = Collections.synchronizedList(new ArrayList(...));
+
+List list = Collections.unmodifiableList(new ArrayList(...)); 
+
+In the Java programming language, every class implicitly or explicitly provides a hashCode() method, which digests the data stored in an instance of the class into a single hash value (a 32-bit signed integer). 
+
+Anytime you override equals() you should also override hashCode(). 
+
+ Collection is a ______.
+group of objects
+
+########################################################################

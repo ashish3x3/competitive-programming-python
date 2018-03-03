@@ -1,0 +1,252 @@
+Java priorities are in the range between MIN_PRIORITY (a constant of 1) and MAX_PRIORITY (a constant of 10). By default, every thread is given priority NORM_PRIORITY (a constant of 5)
+
+
+There are two ways to create a Java thread:
+
+
+Extend the java.lang.Thread class
+
+Implement the java.lang.Runnable interface
+
+In order to create a new thread we may subclass java.lang.Thread and customize what the thread does by overriding its empty run method. 
+
+The run method is where the action of the thread takes place. 
+
+The execution of a thread starts by calling the start method.
+
+Implementing the Runnable interface
+
+In order to create a new thread we may also provide a class that implements the java.lang.Runnable interface
+
+Preferred way in case our class has to subclass some other class
+
+A Runnable object can be wrapped up into a Thread object
+Thread(Runnable threadOb)
+Thread(Runnable  threadOb, String name) 
+
+The thread’s logic is included inside the run method of the runnable object.
+
+
+thread communication
+
+To avoid polling, Java includes an elegant interprocess communication mechanism via the following methods:
+
+wait( ): This method tells the calling thread to give up the monitor and go to sleep until some other thread enters the same monitor and calls notify( ).
+
+notify( ): This method wakes up the first thread that called wait( ) on the same object.
+
+
+notifyAll( ): This method wakes up all the threads that called wait( ) on the same object. The highest priority thread will run first
+
+                    Volatile Modifier in java
+
+If you are working with the multithreaded programming, the volatile keyword will be more useful. 
+
+When multiple threads  using the same variable, each thread will have its own copy of the local cache for that variable. So, when it’s updating the value, it is actually updated 
+in the local cache not in the main variable memory. The other thread which is using the same variable doesn’t know anything about the values changed by the another thread. 
+
+To avoid this problem, if you declare a variable as volatile, then it will not be stored in the local cache. Whenever thread are updating the  values, it is updated to the main memory. So, other threads can access the updated value.
+
+
+
+########################################
+
+Exceptions are  handled in a program by using the following keywords :
+
+try
+catch
+throw
+throws
+finally
+
+try-with-resources statement
+
+JDK 7 introduces a new version of try statement known as try-with-resources statement. 
+
+This feature add another way  of resource management without the finally clause ,  also referred to as automatic resource management
+
+try(resource-specification)
+{
+//use the resource
+}
+
+catch()
+{...}
+
+
+Three Categories of Exceptions
+
+Checked exceptions:  com[ile time exception
+
+
+ A checked exception is an exception that is typically a user error or a problem that cannot be foreseen by the programmer. For example, if a file is to be opened, but the file cannot be found, an exception occurs. These exceptions cannot simply be ignored at the time of compilation.
+
+Unchecked exceptions: rubtime time exception
+
+
+A runtime exception is an exception that occurs that probably could have been avoided by the programmer. As opposed to checked exceptions, runtime exceptions are ignored at the time of compilation.
+.
+
+
+Errors: These are not exceptions at all, but problems that arise beyond the control of the user or the programmer. 
+
+
+throw vs throws
+
+throws is included in the method's declaration part, with a list of exceptions that the method can possible  throw
+
+
+throw is used to throw an exception in a program, explicitly
+
+
+user definrd rxception
+
+You can also create your own exception sub class simply by extending java Exception class and
+
+Override the toString () method of Throwable class
+
+                                 ( or )
+
+2. Pass a message string when throwing an object of the custom exception class
+
+
+All exceptions must be a child of Throwable.
+
+All exceptions must be a child of Throwable.
+
+
+Method Overriding with Exception Handling
+
+If super class method does not declare any exception, then sub class overriden method cannot declare checked exception but it can declare unchecked exceptions.
+
+
+
+
+#########################################################
+
+JDBC is Java application programming interface that allows the Java programmers to access database management system from Java code.
+
+JDBC is a core part of the Java platform and is included in the standard JDK distribution.
+
+
+JDBC drivers enable you to open database connections and to interact with it by sending SQL or database commands 
+Four Types of Drivers are provided.
+
+
+JDBC-ODBC bridge
+2. Part Java, Part Native Driver
+3. Intermediate DAccess Server
+ 4. Pure Java Drivers
+
+
+JDBC-ODBC Bridge
+
+A set of APIs for database access
+Originally only for windows platforms, later extended to
+non-windows platforms
+ • The standard JDK includes classes for the JDBC-ODBC
+bridge (sun.jdbc.odbc.JdbcOdbcDriver)
+
+Part Java, Part Native Driver
+
+A mixture of Java implementation and vendor-specific native APIs for data access
+• This is similar to type 1 except that these have one less layer to go through and so is faster
+• The native JDBC driver (part Java, part native code) must be installed on each client along with the vendor-specific native language API
+
+
+
+Intermediate Database AccessServer
+
+ This type of driver sends the JDBC calls to a middleware server that can connect to different type of databases. 
+
+We should have a middleware server installed to work with this kind of driver. 
+
+This adds to extra network calls and slow performance. Hence this is also not widely used JDBC driver
+
+
+Pure Java Driver
+
+Converts the JDBC API calls to direct network calls using vendor-specific networking protocols
+ Makes direct socket connections with the database
+ It is the most efficient method to access database, both in performance and development time 
+It is the simplest to deploy
+All major database vendors provide Type 4 JDBC drivers for their databases
+
+
+If you are accessing  databases such as Oracle, Sybase the preferred driver type is 4.
+If your Java application is accessing multiple types of databases at the same time, type 3 is the preferred driver.
+Type 2 drivers are useful in situations where a type 3 or type 4 driver is not available yet for your database.
+The type 1 driver is not considered a deployment-level driver and is typically used for development and testing purposes only.
+
+
+
+Typical JDBC Programming Procedure
+
+Import jdbc package  --- import java.sql.*
+
+2. Load the database driver
+2. Obtain a connection
+3. Create and execute statements
+4. Use result sets to navigate through the results
+5 Close the connection
+
+
+This class is used to register and load the database driver. This can load the driver into memory and make a  connection.
+
+Class.forName( ) is used to register the  driver: 
+
+try { 	Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+}
+catch(Exception x)
+{ 	
+} 
+
+
+DriverManager.getConnection() method to create a connection object. 
+
+The most commonly used form of getConnection() requires you to pass a database URL, a username, and a password: 
+
+try{  Connection dbConnection=DriverManager.getConnection(url,"loginName","Password")
+}
+catch( SQLException x )
+{	
+} 
+
+
+The JDBC Statement, CallableStatement, and PreparedStatement interfaces define the methods and properties that enable you to send SQL or PL/SQL commands and receive data from your database 
+
+
+Creating Statement Object
+
+
+Statement stmt = null;
+try {
+   stmt = conn.createStatement( );
+   . . .
+}
+catch (SQLException e) {
+   . . .
+}
+finally {   . . .
+}
+
+CallableStatement object which would be used to execute a call to a database stored procedure.
+Using CallableStatement objects is much like using PreparedStatement objects. You must bind values to all parameters before executing the statement, or you will receive an SQLException.
+
+
+
+Three types of parameters exist: IN, OUT, and INOUT.
+
+ The PreparedStatement object only uses the IN parameter. 
+
+The CallableStatement object can use all three
+
+
+Statement stmt = conn.createStatement();
+ResultSet rset = stmt.executeQuery  ("select NAME, VERTICAL from STUDENT")
+
+
+A ResultSet object maintains a cursor that points to the current row in the result set. 
+
+The term "result set" refers to the row and column data contained in a ResultSet object.
+

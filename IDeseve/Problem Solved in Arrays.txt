@@ -1,0 +1,192 @@
+
+
+Maximum difference between two elements such that larger element appears after the smaller number
+https://www.geeksforgeeks.org/maximum-difference-between-two-elements/
+Examples: If array is [2, 3, 10, 6, 4, 8, 1] then returned value should be 8 (Diff between 10 and 2). If array is [ 7, 9, 5, 6, 3, 2 ] then returned value should be 2 (Diff between 7 and 9)
+In this method, instead of taking difference of the picked element with every other element, we take the difference with the minimum element found so far. So we need to keep track of 2 things:
+1) Maximum difference found so far (max_diff).
+2) Minimum number visited so far (min_element).
+def maxDiff(arr, arr_size):
+    max_diff = arr[1] - arr[0]
+    min_element = arr[0]
+
+    for i in range( 1, arr_size ):
+        if (arr[i] - min_element > max_diff):
+            max_diff = arr[i] - min_element
+
+        if (arr[i] < min_element):
+            min_element = arr[i]
+    return max_diff
+First find the difference between the adjacent elements of the array and store all differences in an auxiliary array diff[] of size n-1. Now this problems turns into finding the maximum sum subarray of this difference array.
+def maxDiff(arr, n):
+    diff = [0] * (n - 1)
+    for i in range (0, n-1):
+        diff[i] = arr[i+1] - arr[i]
+
+    # Now find the maximum sum
+    # subarray in diff array
+    max_diff = diff[0]
+    for i in range(1, n-1):
+        if (diff[i-1] > 0):
+            diff[i] += diff[i-1]
+
+        if (max_diff < diff[i]):
+            max_diff = diff[i]
+
+    return max_diff
+We can modify the above method to work in O(1) extra space. Instead of creating an auxiliary array, we can calculate diff and max sum in same loop
+// Initialize diff, current sum and max sum
+    int diff = arr[1]-arr[0];
+    int curr_sum = diff;
+    int max_sum = curr_sum;
+
+    for(int i=1; i<n-1; i++)
+    {
+        // Calculate current diff
+        diff = arr[i+1]-arr[i];
+
+        // Calculate current sum
+        if (curr_sum > 0)
+           curr_sum += diff;
+        else
+           curr_sum = diff;
+
+        // Update max sum, if needed
+        if (curr_sum > max_sum)
+           max_sum = curr_sum;
+    }
+
+
+Buy and sell stocks | Part 1
+{100, 80, 70, 65, 60, 55, 50} .. {day1,day2,day3 ...}
+we have t buy before we sell..
+1. O(N^2)..check max profit by keeping i fix from i to N and run ovber remoaing array...
+2. O(N).. find minSoFar and ProfixSoFar while iteratng...update on finding any valid..
+for(int i = 0; i < stockPrices.length; i++)
+        {
+            profit = Math.max(profit, stockPrices[i] - minimumPrice);
+            minimumPrice = Math.min(stockPrices[i], minimumPrice);
+        }
+
+http://www.ideserve.co.in/learn/buy-and-sell-stock-part-one
+
+
+
+Buy and sell stocks | Part 1
+..not allowing overlaping transaction..i.e cannnot have buy on i and sell on i+2 day..it has to be i+1 day i.e immediately..how we do it is we search for incresing pair throughout array and if we find any profit by immediately sellignnext day we addit to profuit..
+for(int i=1; i<stockPrices.length; i++){
+            int  currentProfit = stockPrices[i]-stockPrices[i-1];
+            if(currentProfit > 0){
+                totalProfit += currentProfit;
+            }
+        }
+http://www.ideserve.co.in/learn/buy-and-sell-stocks-part-two
+
+
+
+
+
+Count frequencies of array elements in range 1 to n
+2.  O(n) time and O(n) space
+for (int i = 0; i < n; i++) {
+            count[input[i] - 1]++;
+        }
+3. O(n) time and O(1) space
+for (int i = 0; i < n; i++) {
+            input[i]--;
+        }
+ 
+        for (int i = 0; i < n; i++) {
+            input[input[i] % n] += n;
+        }
+ 
+        for (int i = 0; i < n; i++) {
+            System.out.println((i + 1) + " " + input[i] / n);
+            // Change the element back to original value
+            input[i] = input[i] % n + 1;
+        }
+http://www.ideserve.co.in/learn/count-frequencies-of-array-elements
+
+
+Find the number which occurs odd number of times
+xor both array.... xor of an number with itself odd time reult in number itself..finally we will be left with a  number which occur od number of time..
+http://www.ideserve.co.in/learn/find-the-number-which-occurs-odd-number-of-times
+
+
+Find the missing number in the duplicate array
+1. find sum of both and substract
+2. xor both array.... xor of an number with itself odd time reult in number itself..finally we will be left with a  number which occur od number of time..
+http://www.ideserve.co.in/learn/find-the-missing-number-in-the-duplicate-array
+
+
+
+Count Negative Integers in Row/Column-Wise Sorted Matrix
+check for each row from back, and find the first negativer no, then from below that colum in next row search for next -ve no and so on..O(N+M)
+	i=0,j=n-1
+	while j >=0 and i<n:
+	if M[i][j] < 0:
+		count+=(j+1)
+		i+=1
+	else:
+		j-=1
+https://www.youtube.com/watch?v=5dJSZLmDsxk&t=2s
+Amazon
+
+
+
+
+
+
+
+Finding three elements in an array whose sum is closest to a given number
+https://stackoverflow.com/questions/2070359/finding-three-elements-in-an-array-whose-sum-is-closest-to-a-given-number
+We need to check if i,j,k are all distinct. Otherwise, if my target element is 6 and if my input array contains {3,2,1,7,9,0,-4,6} . If i print out the tuples that sum to 6, then I would also get 0,0,6 as output . To avoid this, we need to modify the condition in this way.
+
+if ((A[i] + A[j] + A[k] == 0) && (i!=j) && (i!=k) && (j!=k)) return (A[i], A[j], A[k])
+
+Another O(n^2) solution (by using a hashset).
+
+// K is the sum that we are looking for
+for i 1..n
+    int s1 = K - A[i]
+    for j 1..i
+        int s2 = s1 - A[j]
+        if (set.contains(s2))
+            print the numbers
+    set.add(A[i])
+
+
+for (i in 1..n-2) {
+  j = i+1  // Start right after i.
+  k = n    // Start at the end of the array.
+
+  while (k >= j) {
+    // We got a match! All done.
+    if (A[i] + A[j] + A[k] == 0) return (A[i], A[j], A[k])
+
+    // We didn't match. Let's try to get a little closer:
+    //   If the sum was too big, decrement k.
+    //   If the sum was too small, increment j.
+    (A[i] + A[j] + A[k] > 0) ? k-- : j++
+  }
+  // When the while-loop finishes, j and k have passed each other and there's
+  // no more useful combinations that we can try with this i.
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+how to run composition program in CMD
+
+use private static LinkNode inside main class
+
+javac mainClass.java
+
+java mainClass 
+
+not java mainJava$LinkNode

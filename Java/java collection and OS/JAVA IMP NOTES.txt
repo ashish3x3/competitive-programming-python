@@ -1,0 +1,20 @@
+ The Java JIT compiler compiles Java bytecode to native executable code during the runtime of your program. This increases the runtime of your program significantly. The JIT compiler uses runtime information to identify part in your application which are runtime intensive. These so-called "hot spots" are then translated native code. This is the reason why the JIT compiler is also called "Hot-spot" compiler.
+
+JIT is store the original bytecode and the native code in memory because JIT can also decide that a certain compilation steps must be revised
+
+
+
+FINALIZE()
+
+n applications that may have complex shutdown hooks, this method should not be called from an unknown thread. System.exit never exits normally because the call will block until the JVM is terminated. It's as if whatever code is running that has the power plug pulled on it before it can finish. Calling System.exit will initiate the program's shutdown hooks and whatever thread that calls System.exit will block until program termination. This has the implication that if the shutdown hook in turn submits a task to the thread from which System.exit was called, the program will deadlock.
+
+I'm handling this in my code with the following:
+
+public static void exit(final int status) {
+    new Thread("App-exit") {
+        @Override
+        public void run() {
+            System.exit(status);
+        }
+    }.start();
+}

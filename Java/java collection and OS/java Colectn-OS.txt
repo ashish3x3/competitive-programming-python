@@ -1,0 +1,943 @@
+Java collections overview
+
+Arrays
+Array is the only collection type built in Java. It is useful when you know an upper bound on the number of processed elements in advance. java.util.Arrays contains a lot of useful methods for array processing
+
+If you need to copy one part of array (or the whole array) into another already existing array, you need to use System.arraycopy, which copies a given number of elements from a given position in the source array to a given position in the destination array. Generally, this is the fastest way to copy array contents in Java (but in some cases you may need to check if ByteBuffer bulk copy works faster )
+
+Arrays.toString – fine-print the array contents. 
+
+ Arrays.copyOfRange – if you need to make a copy of the whole array or its subsection.
+Arrays.deepEquals, Arrays.deepHashCode – versions of Arrays.equals/hashCode supporting nested sub-arrays.
+Arrays.equals – if you need to compare two arrays for equality, use this method instead of array equals method ( array.equals is not overridden in any array, so it only compares references to arrays, rather than their contents
+
+ Arrays.asList – conversion from array to List, which could be passed to other standard collection constructors.
+Arrays.binarySearch – fast lookup in a sorted array or its subsection. 
+
+
+ Finally, we need to mention that any Collection could be copied into an array using T[] Collection.toArray( T[] a ) method. The usual pattern of this method call:
+
+    
+
+    return coll.toArray( new T[ coll.size() ] );
+
+
+Single-threaded collections
+
+describes non-thread-safe collections. All these collections are stored in the java.util package
+
+Lists
+
+ ArrayList – the most useful List implementation. Backed by an array and an int – position of the first not used element in the array. Like all Lists, expands itself when necessary.
+
+
+ Has constant element access time. Cheap updates at the tail (constant complexity), expensive at the head (linear complexity) due to ArrayList invariant – all elements start from index = 0 in the underlying array, which means that everything to the right from the update position must be moved to the right for insertions and to the left for removals. 
+
+CPU-cache friendly collection due to being backed by an array (unfortunately, not too friendly, because contains Objects, which are just pointers to the actual objects).
+
+ LinkedList – Deque implementation – each Node consists of a value, prev and next pointers. It means that element access/updates have linear complexity (due to an optimization, these methods do not traverse more than a half of the list, so the most expensive elements are located in the middle of the list).
+
+ You need to use ListIterators if you want to try to write fast LinkedList code. If you want a Queue/Deque implementation (you need to access only first and last elements) – consider using ArrayDeque instead. 
+
+ Vector –
+
+ a prehistoric version of ArrayList with all synchronized methods. Use ArrayList instead. 
+
+
+
+Queues/deques
+
+    ArrayDeque – 
+
+
+Deque implementation based on the array (circular buffer) with head/tail pointers. Unlike LinkedList, this class does not implement List interface, which means that you can not access anything except the first and the last elements. This class is generally preferable to LinkedList for queues/deques due to a limited amount of garbage it generates (old array will be discarded on the extensions).
+
+
+
+
+    Stack – 
+
+
+a LIFO queue. Do not use it in the production code. Use any Deque implementation instead (ArrayDeque is preferable).
+
+
+    PriorityQueue – 
+
+a queue based on the priority heap. Uses either natural ordering or a provided Comparator. Its main property – poll/peek/remove/element methods always return the smallest remaining element in the queue. Despite that, this queue implements Iterable which does not iterate this queue in a sorted order (or any other particular order). This queue is generally preferable to other sorted collections, like TreeSet if all you need is a smallest element in the queue.
+
+
+Maps
+
+ HashMap –
+
+ a most popular map implementation. It just maps keys to values and does nothing else. In case of a high quality hashcode method, get/put methods have a constant complexity.
+
+
+EnumMap 
+
+– a map with enum keys. Generally works faster than a HashMap due to a known maximal number of keys and built-in enum to int mapping (it is a fixed size array of values).
+
+
+Hashtable –
+
+ prehistoric synchronized version of a HashMap. Use HashMap in the new production code. 
+
+
+ IdentityHashMap – 
+
+a very special version of a Map, violating the Map general contract: it compares references using == instead of calling Object.equals.
+
+ This property makes IdentityHashMap useful for various graph traversal algorithms – you may easily store already processed nodes in the IdentityHashMap along with some node-related data. 
+
+ LinkedHashMap – 
+
+a combination of a HashMap and a LinkedList – insertion order of all elements is stored inside a LinkedList. That’s why LinkedHashMap entries, keys and values are always iterated in the insertion order. 
+
+This is the most expensive JDK collection in terms of memory consumption per element. 
+
+
+TreeMap – 
+
+a red-black tree based sorted navigable Map. It sorts all entries based on the natural order or a given Comparator of keys. 
+
+This map requires that implementation of equals and Comparable/Comparator.compareTo() should be consistent.
+
+ This class implements a NavigableMap interface: it allows getting a map of all entries less than/more than given key; getting a prev/next entry (based on the key ordering); getting a map with a given range of keys (which roughly corresponds to SQL BETWEEN operator) and many variations of these methods. 
+
+ WeakHashMap – 
+
+
+this map is generally used in data cache implementations. 
+
+It keeps all its keys with WeakReference, which means that these keys may be garbage collected if there are no strong references to the key objects. 
+
+Values, on the other hand, are stored using strong references. Because of this, you should either ensure that there are no references from values to keys, or keep values inside weak references too: m.put(key, new WeakReference(value)). 
+
+
+
+Sets
+
+
+    HashSet –
+
+ a set implementation based on a HashMap with dummy values (same Object is used for every value). Has the same properties as a HashMap. Due to such implementation, consumes more memory than actually required for this data structure.
+
+
+    EnumSet – 
+
+a set of enum values. Each enum in Java is mapped into an int: one distinct int for each enum value. This allows to use a BitSet-like structure for this collection, where each bit is mapped to a distinct enum value. 
+
+There are 2 actual implementations – RegularEnumSet backed up by a single long (and capable to store up to 64 enum values, which covers 99.9% use cases) and JumboEnumSet backed by a long[].
+
+
+    BitSet – 
+
+a bit set. You should always keep in mind that you may use a BitSet for representing a dense set of integers (like ids starting from a number known in advance). This class uses a long[] for bit storage.
+
+
+    LinkedHashSet – 
+
+like HashSet, this class is implemented on top of a LinkedHashMap. This is the only set which keeps its elements in the insertion order.
+
+
+    TreeSet – 
+
+like HashSet, this class is based on a TreeMap instance. This is the only sorted set in the single threaded part of the standard JDK.
+
+
+
+
+java.util.Collections
+
+Like java.util.Arrays for arrays, java.util.Collections has a lot of useful methods for collection processing. 
+
+
+Collections.checkedCollection / checkedList / checkedMap / checkedSet / checkedSortedMap / checkedSortedSet – 
+
+return a view of a collection which checks type of added elements at runtime. Any attempt to add an element of incompatible type will throw a ClassCastException.
+
+
+
+ Collections.emptyList / emptyMap / emptySet – 
+
+useful when you need to return an immutable empty collection and don’t want to allocate any objects.
+
+
+Collections.singleton / singletonList / singletonMap – returns an immutable set/list/map with a single entry.
+
+
+Collections.synchronizedCollection / synchronizedList / synchronizedMap / synchronizedSet / synchronizedSortedMap / synchronizedSortedSet –
+
+ returns a view of a collection with all synchronized methods (cheap and inefficient multithreading, still not supporting any compound actions, like put-or-update).
+
+
+
+Collections.unmodifiableCollection / unmodifiableList / unmodifiableMap / unmodifiableSet / unmodifiableSortedMap / unmodifiableSortedSet –
+
+ return an unmodifiable view of a collection. Useful when you need to implement an immutable object containing any collections. 
+
+
+
+Concurrent collections
+
+This part of the article describes thread-safe collections from java.util.concurrent package.
+
+
+
+he main property of these collections is a guarantee of atomic execution of their methods. 
+
+You should not forget that compound actions, like “add-or-update” or “check-then-update”, involving more than one method call, should still be synchronized,
+
+ because information queried from the collection on the first step of compound action could become invalid before you will reach the second step. 
+
+
+ ConcurrentSkipListMap / ConcurrentSkipListSet and LinkedBlockingDeque were added in Java 1.6. The latest additions to Java 1.7 are ConcurrentLinkedDeque and LinkedTransferQueue. 
+
+
+Lists
+
+
+
+    CopyOnWriteArrayList –
+
+ list implementation, making a new copy of underlying array on each update. 
+
+This is an expensive operation, so this class could be used when traversals seriously outnumbering updates. 
+
+The usual use case for this collection is listeners/observers collection.
+
+Queues/deques
+
+ ArrayBlockingQueue – 
+
+a bounded blocking queue backed by an array. Can not be resized, so when you will try to add an element to a full queue, a method call will block until another thread will extract an element from the queue.
+
+ConcurrentLinkedDeque / ConcurrentLinkedQueue – 
+
+an unbounded deque/queue based on the linked list. 
+
+Adding elements to this queue does not block, but this has an unfortunate requirement that a consumer for this collection must work at least as fast as a producer, otherwise you will run out of memory.
+
+ LinkedTransferQueue – 
+
+an unbounded queue based on the linked list. Besides ordinary queue operations, it has a group of transfer methods, which allow a producer to send a message straight to the waiting consumer, thus removing the need to store an element into a queue. This is a lock-free collection based on CAS operations.  
+
+
+
+ PriorityBlockingQueue –
+
+ an unbounded blocking queue version of PriorityQueue.
+
+
+SynchronousQueue – 
+
+a blocking queue without any internal capacity. 
+
+It means that any insert request must wait for corresponding remove request and vice versa.
+
+ If you don’t need a Queue interface, then the same functionality could be achieved via Exchanger class. 
+
+
+Maps
+
+
+ConcurrentHashMap –
+
+ a hash table with full concurrency for get operations and configurable level of concurrency for put operations
+
+
+Remember that this map is not a thread-safe replacement for HashMap algorithms – any “get-then-put” sequences of method calls on this map (or any other concurrent collection) should be externally synchronized. 
+
+################################################################
+
+
+What are the basic interfaces of Java Collections Framework?
+
+Collection is the root of the collection hierarchy. A collection represents a group of objects known as its elements. The Java platform doesn’t provide any direct implementations of this interface.
+
+Set is a collection that cannot contain duplicate elements. This interface models the mathematical set abstraction and is used to represent sets, such as the deck of cards.
+
+List is an ordered collection and can contain duplicate elements. You can access any element from it’s index. List is more like array with dynamic length.
+
+A Map is an object that maps keys to values. A map cannot contain duplicate keys: Each key can map to at most one value.
+
+Some other interfaces are Queue, Dequeue, Iterator, SortedSet, SortedMap and ListIterator
+
+
+
+
+
+
+
+
+
+
+
+Why Map interface doesn’t extend Collection interface?
+
+Although Map interface and it’s implementations are part of Collections Framework, Map are not collections and collections are not Map. Hence it doesn’t make sense for Map to extend Collection or vice versa.
+If Map extends Collection interface, then where are the elements? Map contains key-value pairs and it provides methods to retrieve list of Keys or values as Collection but it doesn’t fit into the “group of elements” paradigm.
+
+
+What is an Iterator?
+
+Iterator interface provides methods to iterate over any Collection. We can get iterator instance from a Collection using iterator method. Iterator takes the place of Enumeration in the Java Collections Framework. Iterators allow the caller to remove elements from the underlying collection during the iteration.
+
+What is difference between Enumeration and Iterator interface?
+
+Enumeration is twice as fast as Iterator and uses very less memory. Enumeration is very basic and fits to basic needs. But Iterator is much safer as compared to Enumeration because it always denies other threads to modify the collection object which is being iterated by it.
+
+Why there is not method like Iterator.add() to add elements to the collection?
+
+The semantics are unclear, given that the contract for Iterator makes no guarantees about the order of iteration. Note, however, that ListIterator does provide an add operation, as it does guarantee the order of the iteration.
+
+
+What is different between Iterator and ListIterator?
+
+    We can use Iterator to traverse Set and List collections whereas ListIterator can be used with Lists only.
+    Iterator can traverse in forward direction only whereas ListIterator can be used to traverse in both the directions.
+    ListIterator inherits from Iterator interface and comes with extra functionalities like adding an element, replacing an element, getting index position for previous and next elements.
+
+
+
+
+What are different ways to iterate over a list?
+
+We can iterate over a list in two different ways – using iterator and using for-each loop.
+01	List<String> strList = new ArrayList<>();
+02	//using for-each loop
+03	for(String obj : strList){
+04	    System.out.println(obj);
+05	}
+06	//using iterator
+07	Iterator<String> it = strList.iterator();
+08	while(it.hasNext()){
+09	    String obj = it.next();
+10	    System.out.println(obj);
+11	}
+
+Using iterator is more thread-safe because it makes sure that if underlying list elements are modified, it will throw ConcurrentModificationException.
+
+
+
+What do you understand by iterator fail-fast property?
+
+Iterator fail-fast property checks for any modification in the structure of the underlying collection everytime we try to get the next element. If there are any modifications found, it throws ConcurrentModificationException. All the implementations of Iterator in Collection classes are fail-fast by design except the concurrent collection classes like ConcurrentHashMap and CopyOnWriteArrayList.
+
+What is difference between fail-fast and fail-safe?
+
+Iterator fail-safe property work with the clone of underlying collection, hence it’s not affected by any modification in the collection. By design, all the collection classes in java.util package are fail-fast whereas collection classes in java.util.concurrent are fail-safe. Fail-fast iterators throw ConcurrentModificationException whereas fail-safe iterator never throws ConcurrentModificationException. Check this post for CopyOnWriteArrayList Example.
+
+
+
+
+How to avoid ConcurrentModificationException while iterating a collection?
+
+We can use concurrent collection classes to avoid ConcurrentModificationException while iterating over a collection, for example CopyOnWriteArrayList instead of ArrayList.
+Check this post for ConcurrentHashMap Example.
+
+
+Why there are no concrete implementations of Iterator interface?
+
+Iterator interface declare methods for iterating a collection but it’s implementation is responsibility of the Collection implementation classes. Every collection class that returns an iterator for traversing has it’s own Iterator implementation nested class.
+This allows collection classes to chose whether iterator is fail-fast or fail-safe. For example ArrayList iterator is fail-fast whereas CopyOnWriteArrayList iterator is fail-safe.
+
+
+The other important things to know about HashMap are capacity, load factor, threshold resizing. HashMap initial default capacity is 32 and load factor is 0.75. Threshold is capacity multiplied by load factor and whenever we try to add an entry, if map size is greater than threshold, HashMap rehashes the contents of map into a new array with a larger capacity. The capacity is always power of 2, so if you know that you need to store a large number of key-value pairs, for example in caching data from database, it’s good idea to initialize the HashMap with correct capacity and load factor.
+
+
+
+    If o1.equals(o2), then o1.hashCode() == o2.hashCode()should always be true.
+    If o1.hashCode() == o2.hashCode is true, it doesn’t mean that o1.equals(o2) will be true.
+
+
+
+
+
+Can we use any class as Map key?We can use any class as Map Key, however following points should be considered before using them.
+
+    If the class overrides equals() method, it should also override hashCode() method.
+    The class should follow the rules associated with equals() and hashCode() for all instances. Please refer earlier question for these rules.
+    If a class field is not used in equals(), you should not use it in hashCode() method.
+    Best practice for user defined key class is to make it immutable, so that hashCode() value can be cached for fast performance. Also immutable classes make sure that hashCode() and equals() will not change in future that will solve any issue with mutability.
+    For example, let’s say I have a class MyKeythat I am using for HashMap key.
+
+    01	//MyKey name argument passed is used for equals() and hashCode()
+    02	MyKey key = new MyKey('Pankaj'); //assume hashCode=1234
+    03	myHashMap.put(key, 'Value');
+    04	 
+    05	// Below code will change the key hashCode() and equals()
+    06	// but it's location is not changed.
+    07	key.setName('Amit'); //assume new hashCode=7890
+    08	 
+    09	//below will return null, because HashMap will try to look for key
+    10	//in the same index as it was stored but since key is mutated,
+    11	//there will be no match and it will return null.
+    12	myHashMap.get(new MyKey('Pankaj'));
+
+    This is the reason why String and Integer are mostly used as HashMap keys
+
+
+
+What is difference between HashMap and Hashtable?
+
+HashMap and Hashtable both implements Map interface and looks similar, however there are following difference between HashMap and Hashtable.
+
+    HashMap allows null key and values whereas Hashtable doesn’t allow null key and values.
+    Hashtable is synchronized but HashMap is not synchronized. So HashMap is better for single threaded environment, Hashtable is suitable for multi-threaded environment.
+    LinkedHashMap was introduced in Java 1.4 as a subclass of HashMap, so incase you want iteration order, you can easily switch from HashMap to LinkedHashMap but that is not the case with Hashtable whose iteration order is unpredictable.
+    HashMap provides Set of keys to iterate and hence it’s fail-fast but Hashtable provides Enumeration of keys that doesn’t support this feature.
+    Hashtable is considered to be legacy class and if you are looking for modifications of Map while iterating, you should use ConcurrentHashMap.
+
+
+
+How to decide between HashMap and TreeMap?
+
+For inserting, deleting, and locating elements in a Map, the HashMap offers the best alternative. If, however, you need to traverse the keys in a sorted order, then TreeMap is your better alternative. Depending upon the size of your collection, it may be faster to add elements to a HashMap, then convert the map to a TreeMap for sorted key traversal.
+
+
+
+What are similarities and difference between ArrayList and Vector?
+
+ArrayList and Vector are similar classes in many ways.
+
+    Both are index based and backed up by an array internally.
+    Both maintains the order of insertion and we can get the elements in the order of insertion.
+    The iterator implementations of ArrayList and Vector both are fail-fast by design.
+    ArrayList and Vector both allows null values and random access to element using index number.
+
+These are the differences between ArrayList and Vector.
+
+    Vector is synchronized whereas ArrayList is not synchronized. However if you are looking for modification of list while iterating, you should use CopyOnWriteArrayList.
+    ArrayList is faster than Vector because it doesn’t have any overhead because of synchronization.
+    ArrayList is more versatile because we can get synchronized list or read-only list from it easily using Collections utility class.
+
+
+
+
+
+What is difference between Array and ArrayList? When will you use Array over ArrayList?
+
+Arrays can contain primitive or Objects whereas ArrayList can contain only Objects.
+Arrays are fixed size whereas ArrayList size is dynamic.
+Arrays doesn’t provide a lot of features like ArrayList, such as addAll, removeAll, iterator etc.Although ArrayList is the obvious choice when we work on list, there are few times when array are good to use.
+
+    If the size of list is fixed and mostly used to store and traverse them.
+    For list of primitive data types, although Collections use autoboxing to reduce the coding effort but still it makes them slow when working on fixed size primitive data types.
+    If you are working on fixed multi-dimensional situation, using [][] is far more easier than List<List<>>
+
+
+
+
+Which collection classes provide random access of it’s elements?
+
+ArrayList, HashMap, TreeMap, Hashtable classes provide random access to it’s elements. Download java collections pdf for more information.
+
+
+
+What are concurrent Collection Classes?
+
+Java 1.5 Concurrent package (java.util.concurrent) contains thread-safe collection classes that allow collections to be modified while iterating. By design iterator is fail-fast and throws ConcurrentModificationException. Some of these classes are CopyOnWriteArrayList, ConcurrentHashMap, CopyOnWriteArraySet
+
+
+
+java.util.concurrent.BlockingQueueis a Queue that supports operations that wait for the queue to become non-empty when retrieving and removing an element, and wait for space to become available in the queue when adding an element.BlockingQueue interface is part of java collections framework and it’s primarily used for implementing producer consumer problem. We don’t need to worry about waiting for the space to be available for producer or object to be available for consumer in BlockingQueue as it’s handled by implementation classes of BlockingQueue.Java provides several BlockingQueue implementations such as ArrayBlockingQueue, LinkedBlockingQueue, PriorityBlockingQueue, SynchronousQueue etc.
+
+
+
+
+What is Collections Class?
+
+java.util.Collectionsis a utility class consists exclusively of static methods that operate on or return collections. It contains polymorphic algorithms that operate on collections, “wrappers”, which return a new collection backed by a specified collection, and a few other odds and ends.This class contains methods for collection framework algorithms, such as binary search, sorting, shuffling, reverse etc.
+
+
+
+
+
+
+What is difference between Comparable and Comparator interface?
+
+Comparable and Comparator interfaces are used to sort collection or array of objects.Comparable interface is used to provide the natural sorting of objects and we can use it to provide sorting based on single logic.
+Comparator interface is used to provide different algorithms for sorting and we can chose the comparator we want to use to sort the given collection of objects.
+
+How can we sort a list of Objects?
+
+If we need to sort an array of Objects, we can use Arrays.sort(). If we need to sort a list of objects, we can use Collections.sort(). Both these classes have overloaded sort() methods for natural sorting (using Comparable) or sorting based on criteria (using Comparator). Collections internally uses Arrays sorting method, so both of them have same performance except that Collections take sometime to convert list to array.
+
+
+While passing a Collection as argument to a function, how can we make sure the function will not be able to modify it?
+
+We can create a read-only collection using Collections.unmodifiableCollection(Collection c) method before passing it as argument, this will make sure that any operation to change the collection will throw UnsupportedOperationException.
+
+
+
+How can we create a synchronized collection from given collection?
+
+We can use Collections.synchronizedCollection(Collection c) to get a synchronized (thread-safe) collection backed by the specified collection.
+
+What are common algorithms implemented in Collections Framework?
+
+Java Collections Framework provides algorithm implementations that are commonly used such as sorting and searching. Collections class contain these method implementations. Most of these algorithms work on List but some of them are applicable for all kinds of collections. Some of them are sorting, searching, shuffling, min-max values.
+
+
+What are best practices related to Java Collections Framework?
+
+    Chosing the right type of collection based on the need, for example if size is fixed, we might want to use Array over ArrayList. If we have to iterate over the Map in order of insertion, we need to use TreeMap. If we don’t want duplicates, we should use Set.
+    Some collection classes allows to specify the initial capacity, so if we have an estimate of number of elements we will store, we can use it to avoid rehashing or resizing.
+    Write program in terms of interfaces not implementations, it allows us to change the implementation easily at later point of time.
+    Always use Generics for type-safety and avoid ClassCastException at runtime.
+    Use immutable classes provided by JDK as key in Map to avoid implementation of hashCode() and equals() for our custom class.
+    Use Collections utility class as much as possible for algorithms or to get read-only, synchronized or empty collections rather than writing own implementation. It will enhance code-reuse with greater stability and low maintainability.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Collections.emptyList() vs new instance
+
+The same question applies to emptyMap() and emptySet().
+
+Both methods return an empty list, but Collections.emptyList() returns a list that is immutable. This mean you cannot add new elements to the "empty" list. At the background, each call of Collections.emptyList() actually won't create a new instance of an empty list. Instead, it will reuse the existing empty instance. If you are familiar Singleton in the design pattern, you should know what I mean. So this will give you better performance if called frequently.
+
+
+COLLECTON COPY
+
+ArrayList<Integer> dstList = new ArrayList<Integer>(srcList);
+
+ArrayList<Integer> dstList = new ArrayList<Integer>(srcList.size());
+Collections.copy(dstList, srcList);
+
+Both methods are shallow copy. So what is the difference between these two methods?
+
+    First, Collections.copy() won't reallocate the capacity of dstList even if dstList does not have enough space to contain all srcList elements. Instead, it will throw an 
+
+
+Collections.copy() can only accept List as both source and destination, while ArrayList accepts Collection as the parameter, therefore more general.
+
+
+How do I remove repeated elements from ArrayList?
+
+This question is quite related to the above one.
+If you don't care the ordering of the elements in the ArrayList, a clever way is to put the list into a set to remove duplication, and then to move it back to the list. Here is the code
+
+ArrayList** list = ... // initial a list with duplicate elements
+Set<Integer> set = new HashSet<Integer>(list);
+list.clear();
+list.addAll(set);
+
+
+Easiest way to convert a List to a Set?
+
+There are two ways to do so, depending on how you want equal defined. The first piece of code puts a list into a HashSet. Duplication is then identified mostly by hashCode(). In most cases, it will work. But if you need to specify the way of comparison, it is better to use the second piece of code where you can define your own comparator.
+
+Set<Integer> set = new HashSet<Integer>(list);
+
+Set<Integer> set = new TreeSet<Integer>(aComparator);
+set.addAll(list);
+
+
+
+How to convert int[] into List?
+
+The easiest way might still be using ArrayUtils in Apache Commons Lang library, like below.
+
+List list = Arrays.asList(ArrayUtils.toObject(array));
+
+In JDK, there is no short-cut either.
+
+int[] array = {1,2,3,4,5};
+List<Integer> list = new ArrayList<Integer>();
+for(int i: array) {
+  list.add(i);
+}
+
+How to convert List to int[]?
+
+The easiest way might be using ArrayUtils in Apache Commons Lang library.
+
+int[] array = ArrayUtils.toPrimitive(list.toArray(new Integer[0]));
+
+In JDK, there is no short-cut. Note that you can not use List.toArray(), because that will convert List to Integer[]. The correct way is following,
+
+int[] array = new int[list.size()];
+for(int i=0; i < list.size(); i++) {
+  array[i] = list.get(i);
+}
+
+
+
+
+
+
+
+
+Efficient equivalent for removing elements while iterating the Collection
+
+The only correct way to modify a collection while iterating is using Iterator.remove(). For example,
+
+Iterator<Integer> itr = list.iterator();
+while(itr.hasNext()) {
+   // do something
+   itr.remove();
+}
+
+One most frequent incorrect code is
+
+for(Integer i: list) {
+  list.remove(i);
+}
+
+You will get a ConcurrentModificationException by running the above code. This is because an iterator has been generated (in for statement) to traverse over the list, but at the same time the list is changed by Iterator.remove(). In Java, "it is not generally permissible for one thread to modify a collection while another thread is iterating over it."
+
+
+
+
+
+
+#####################################################################################
+
+
+
+Lock Reentrance
+
+Synchronized blocks in Java are reentrant. This means, that if a Java thread enters a synchronized block of code, and thereby take the lock on the monitor object the block is synchronized on, the thread can enter other Java code blocks synchronized on the same monitor object. Here is an example:
+
+public class Reentrant{
+
+  public synchronized outer(){
+    inner();
+  }
+
+  public synchronized inner(){
+    //do something
+  }
+}
+
+
+Notice how both outer() and inner() are declared synchronized, which in Java is equivalent to a synchronized(this) block. If a thread calls outer() there is no problem calling inner() from inside outer(), since both methods (or blocks) are synchronized on the same monitor object ("this"). If a thread already holds the lock on a monitor object, it has access to all blocks synchronized on the same monitor object. This is called reentrance. The thread can reenter any block of code for which it already holds the lock. 
+
+
+public class Reentrant2{
+
+  Lock lock = new Lock();
+
+  public outer(){
+    lock.lock();
+    inner();
+    lock.unlock();
+  }
+
+  public synchronized inner(){
+    lock.lock();
+    //do something
+    lock.unlock();
+  }
+}
+
+
+
+
+ The reason the thread will be blocked the second time it calls lock() without having called unlock() in between, is apparent when we look at the lock() implementation:
+
+public class Lock{
+
+  boolean isLocked = false;
+
+  public synchronized void lock()
+  throws InterruptedException{
+    while(isLocked){
+      wait();
+    }
+    isLocked = true;
+  }
+
+  ...
+}
+
+
+
+
+ To make the Lock class reentrant we need to make a small change:
+
+public class Lock{
+
+  boolean isLocked = false;
+  Thread  lockedBy = null;
+  int     lockedCount = 0;
+
+  public synchronized void lock()
+  throws InterruptedException{
+    Thread callingThread = Thread.currentThread();
+    while(isLocked && lockedBy != callingThread){
+      wait();
+    }
+    isLocked = true;
+    lockedCount++;
+    lockedBy = callingThread;
+  }
+
+
+  public synchronized void unlock(){
+    if(Thread.curentThread() == this.lockedBy){
+      lockedCount--;
+
+      if(lockedCount == 0){
+        isLocked = false;
+        notify();
+      }
+    }
+  }
+
+  ...
+}
+
+
+
+
+ Notice how the while loop (spin lock) now also takes the thread that locked the Lock instance into consideration. If either the lock is unlocked (isLocked = false) or the calling thread is the thread that locked the Lock instance, the while loop will not execute, and the thread calling lock() will be allowed to exit the method.
+
+Additionally, we need to count the number of times the lock has been locked by the same thread. Otherwise, a single call to unlock() will unlock the lock, even if the lock has been locked multiple times. We don't want the lock to be unloced until the thread that locked it, has executed the same amount of unlock() calls as lock() calls.
+
+The Lock class is now reentrant. 
+
+
+
+Lock Fairness
+
+Java's synchronized blocks makes no guarantees about the sequence in which threads trying to enter them are granted access. Therefore, if many threads are constantly competing for access to the same synchronized block, there is a risk that one or more of the threads are never granted access - that access is always granted to other threads. This is called starvation. To avoid this a Lock should be fair. Since the Lock implementations shown in this text uses synchronized blocks internally, they do not guarantee fairness. Starvation and fairness are discussed in more detail in the text Starvation and Fairness.
+Calling unlock() From a finally-clause
+
+When guarding a critical section with a Lock, and the critical section may throw exceptions, it is important to call the unlock() method from inside a finally-clause. Doing so makes sure that the Lock is unlocked so other threads can lock it. Here is an example:
+
+lock.lock();
+try{
+  //do critical section code, which may throw exception
+} finally {
+  lock.unlock();
+}
+
+This little construct makes sure that the Lock is unlocked in case an exception is thrown from the code in the critical section. If unlock() was not called from inside a finally-clause, and an exception was thrown from the critical section, the Lock would remain locked forever, causing all threads calling lock() on that Lock instance to halt indefinately. 
+
+
+
+
+Causes of Starvation in Java
+
+The following three common causes can lead to starvation of threads in Java:
+
+    Threads with high priority swallow all CPU time from threads with lower priority.
+
+    Threads are blocked indefinately waiting to enter a synchronized block, because other threads are constantly allowed access before it.
+
+    Threads waiting on an object (called wait() on it) remain waiting indefinitely because other threads are constantly awakened instead of it.
+
+
+Threads waiting on an object (called wait() on it) remain waiting indefinitely
+
+The notify() method makes no guarantee about what thread is awakened if multiple thread have called wait() on the object notify() is called on. It could be any of the threads waiting. Therefore there is a risk that a thread waiting on a certain object is never awakened because other waiting threads are always awakened instead of it. 
+
+
+
+
+Implementing Fairness in Java
+
+Using Locks Instead of Synchronized Blocks
+
+ To increase the fairness of waiting threads first we will change the code block to be guarded by a lock rather than a synchronized block:
+
+public class Synchronizer{
+  Lock lock = new Lock();
+
+  public void doSynchronized() throws InterruptedException{
+    this.lock.lock();
+      //critical section, do a lot of work which takes a long time
+    this.lock.unlock();
+  }
+
+}
+
+Notice how the doSynchronized() method is no longer declared synchronized. Instead the critical section is guarded by the lock.lock() and lock.unlock() calls
+
+
+
+
+Starvation and Fairness
+
+By Jakob Jenkov
+ Connect with me:
+Rate article:
+Share article:
+
+Table of Contents
+
+    Causes of Starvation in Java
+        Threads with high priority swallow all CPU time from threads with lower priority
+        Threads are blocked indefinitely waiting to enter a synchronized block
+        Threads waiting on an object (called wait() on it) remain waiting indefinitely
+    Implementing Fairness in Java
+        Using Locks Instead of Synchronized Blocks
+        A Fair Lock
+        A Note on Performance
+
+If a thread is not granted CPU time because other threads grab it all, it is called "starvation". The thread is "starved to death" because other threads are allowed the CPU time instead of it. The solution to starvation is called "fairness" - that all threads are fairly granted a chance to execute.
+Causes of Starvation in Java
+
+The following three common causes can lead to starvation of threads in Java:
+
+    Threads with high priority swallow all CPU time from threads with lower priority.
+
+    Threads are blocked indefinately waiting to enter a synchronized block, because other threads are constantly allowed access before it.
+
+    Threads waiting on an object (called wait() on it) remain waiting indefinitely because other threads are constantly awakened instead of it.
+
+Threads with high priority swallow all CPU time from threads with lower priority
+
+You can set the thread priority of each thread individually. The higher the priority the more CPU time the thread is granted. You can set the priority of threads between 1 and 10. Exactly how this is interpreted depends on the operating system your application is running on. For most applications you are better off leaving the priority unchanged.
+Threads are blocked indefinitely waiting to enter a synchronized block
+
+Java's synchronized code blocks can be another cause of starvation. Java's synchronized code block makes no guarantee about the sequence in which threads waiting to enter the synchronized block are allowed to enter. This means that there is a theoretical risk that a thread remains blocked forever trying to enter the block, because other threads are constantly granted access before it. This problem is called "starvation", that a thread is "starved to death" by because other threads are allowed the CPU time instead of it.
+Threads waiting on an object (called wait() on it) remain waiting indefinitely
+
+The notify() method makes no guarantee about what thread is awakened if multiple thread have called wait() on the object notify() is called on. It could be any of the threads waiting. Therefore there is a risk that a thread waiting on a certain object is never awakened because other waiting threads are always awakened instead of it.
+Implementing Fairness in Java
+
+While it is not possible to implement 100% fairness in Java we can still implement our synchronization constructs to increase fairness between threads.
+
+First lets study a simple synchronized code block:
+
+public class Synchronizer{
+
+  public synchronized void doSynchronized(){
+    //do a lot of work which takes a long time
+  }
+
+}
+
+If more than one thread call the doSynchronized() method, some of them will be blocked until the first thread granted access has left the method. If more than one thread are blocked waiting for access there is no guarantee about which thread is granted access next.
+Using Locks Instead of Synchronized Blocks
+
+To increase the fairness of waiting threads first we will change the code block to be guarded by a lock rather than a synchronized block:
+
+public class Synchronizer{
+  Lock lock = new Lock();
+
+  public void doSynchronized() throws InterruptedException{
+    this.lock.lock();
+      //critical section, do a lot of work which takes a long time
+    this.lock.unlock();
+  }
+
+}
+
+Notice how the doSynchronized() method is no longer declared synchronized. Instead the critical section is guarded by the lock.lock() and lock.unlock() calls.
+
+A simple implementation of the Lock class could look like this:
+
+public class Lock{
+  private boolean isLocked      = false;
+  private Thread  lockingThread = null;
+
+  public synchronized void lock() throws InterruptedException{
+    while(isLocked){
+      wait();
+    }
+    isLocked      = true;
+    lockingThread = Thread.currentThread();
+  }
+
+  public synchronized void unlock(){
+    if(this.lockingThread != Thread.currentThread()){
+      throw new IllegalMonitorStateException(
+        "Calling thread has not locked this lock");
+    }
+    isLocked      = false;
+    lockingThread = null;
+    notify();
+  }
+}
+
+
+
+http://tutorials.jenkov.com/java-concurrency/starvation-and-fairness.html
+
+PROGRAM FOR ""FAIR LOCK"":::::::::::::::::::::::::
+
+ First you might notice that the lock() method is no longer declared synchronized. Instead only the blocks necessary to synchronize are nested inside synchronized blocks.
+
+FairLock creates a new instance of QueueObject and enqueue it for each thread calling lock(). The thread calling unlock() will take the top QueueObject in the queue and call doNotify() on it, to awaken the thread waiting on that object. This way only one waiting thread is awakened at a time, rather than all waiting threads. This part is what governs the fairness of the FairLock. 
+
+
+ Process vs. threads
+
+A process runs independently and isolated of other processes. It cannot directly access shared data in other processes. The resources of the process, e.g. memory and CPU time, are allocated to it via the operating system.
+
+A thread is a so called lightweight process. It has its own call stack, but can access shared data of other threads in the same process. Every thread has its own memory cache. If a thread reads shared data it stores this data in its own memory cache. A thread can re-read the shared data. 
+
+
+
+dEFISIV COPING
+
+ The following example creates a copy of a list (ArrayList) and returns only the copy of the list. This way the client of this class cannot remove elements from the list.
+
+package de.vogella.performance.defensivecopy;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class MyDataStructure {
+  List<String> list = new ArrayList<String>();
+
+  public void add(String s) {
+    list.add(s);
+  }
+
+  
+/** * Makes a defensive copy of the List and return it * This way cannot modify the list itself * * @return List<String> */
+
+  public List<String> getList() {
+    return Collections.unmodifiableList(list);
+  }
+} 
+
+
+
+
+THREADS
+
+Runnable task = new MyRunnable(10000000L + i);
+      Thread worker = new Thread(task);
+
+ Using the Thread class directly has the following disadvantages.
+
+    Creating a new thread causes some performance overhead
+
+    Too many threads can lead to reduced performance, as the CPU needs to switch between these threads.
+
+    You cannot easily control the number of threads, therefore you may run into out of memory errors due to too many threads.
+
+The java.util.concurrent package offers improved support for concurrency compared to the direct usage of Threads. This package is described in the next section. 
+
+

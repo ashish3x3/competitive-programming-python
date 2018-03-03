@@ -1,0 +1,8 @@
+Set common = new HashSet(listA); common.retainAll(listB); // now "common" contains only the common elements
+
+
+
+Use Collection.containsAll():
+
+boolean isSubset = listA.containsAll(listB);
+

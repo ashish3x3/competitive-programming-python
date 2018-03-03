@@ -1,0 +1,666 @@
+What is a serialVersionUID and why should I use it?
+
+SerialVersionUID is a unique identifier for each class, JVM uses it to compare the versions of the class ensuring that the same class was used during Serialization is loaded during Deserialization.
+
+Specifying one gives more control, though JVM does generate one if you don't specify. The value generated can differ between different compilers. Furthermore, sometimes you just want for some reason to forbid deserialization of old serialized objects [backward incompatibility], and in this case you just have to change the serialVersionUID.
+
+Java docs says:
+
+    "the default serialVersionUID computation is highly sensitive to class details that may vary depending on compiler implementations, and can thus result in unexpected InvalidClassExceptions during deserialization".
+
+    You must declare serialVersionUID because it give us more control.
+
+
+always include it as a field, for example:
+
+private static final long serialVersionUID = 7526472295622776147L;
+
+http://www.javapractices.com/topic/TopicAction.do?Id=45
+
+=========================================================================================
+
+
+
+How to make a java class immutable??
+
+An immutable class is one whose state can not be changed once created. 
+
+Benefits of making a class immutable
+
+are simple to construct, test, and use
+are automatically thread-safe and have no synchronization issues
+do not need a copy constructor
+do not need an implementation of clone
+always have “failure atomicity” : if an immutable object throws an exception, it’s never left in an undesirable or indeterminate state
+
+
+Guidelines to make a class immutable
+
+Don’t provide “setter” methods — methods that modify fields or objects referred to by fields.
+Make all fields final and private
+Don’t allow subclasses to override methods::The simplest way to do this is to declare the class as final. Final classes in java can not be overridden.
+4) Special attention when having mutable instance variables::::
+Always remember that your instance variables will be either mutable or immutable. Identify them and return new objects with copied content for all mutable objects. Immutable variables can be returned safely without extra effort.
+
+Please note that while it is possible to implement immutability without "final" keyword, its use 
+makes that purpose explicit, to the human (the software developer) and the machine (the compiler).
+
+A more sophisticated approach is to make the constructor private and construct instances in factory methods.
+
+
+As said earlier, Immutable classes are those class, whose object can not be modified once created, it means any modification on immutable object will result in another immutable object.
+
+### best example to understand immutable and mutable objects are, String and StringBuffer.
+
+ Since String is immutable class, any change on existing string object will result in another string e.g. replacing a character into String, creating substring from String, all result in a new objects. While in case of mutable object like StringBuffer, any modification is done on object itself and no new objects are created. Some times this immutability of String can also cause security hole, and that the reason 
+
+###why password should be stored on char array instead of String.
+
+Read more: http://javarevisited.blogspot.com/2013/03/how-to-create-immutable-class-object-java-example-tutorial.html#ixzz3JUzj7lRd
+
+
+
+
+import java.util.Date;
+
+public final class ImmutableClass
+{
+ 
+    /**
+    * Integer class is immutable as it does not provide any setter to change its content
+    * */
+    private final Integer immutableField1;
+    /**
+    * String class is immutable as it also does not provide setter to change its content
+    * */
+    private final String immutableField2;
+    /**
+    * Date class is mutable as it provide setters to change various date/time parts
+    * */
+    private final Date mutableField;
+ 
+    //Default private constructor will ensure no unplanned construction of class
+    private ImmutableClass(Integer fld1, String fld2, Date date)
+    {
+        this.immutableField1 = fld1;
+        this.immutableField2 = fld2;
+        this.mutableField = new Date(date.getTime());
+    }
+ 
+    //Factory method to store object creation logic in single place
+    public static ImmutableClass createNewInstance(Integer fld1, String fld2, Date date)
+    {
+        return new ImmutableClass(fld1, fld2, date);
+    }
+ 
+    //Provide no setter methods
+ 
+    /**
+    * Integer class is immutable so we can return the instance variable as it is
+    * */
+    public Integer getImmutableField1() {
+        return immutableField1;
+    }
+ 
+    /**
+    * String class is also immutable so we can return the instance variable as it is
+    * */
+    public String getImmutableField2() {
+        return immutableField2;
+    }
+ 
+    /**
+    * Date class is mutable so we need a little care here.
+    * We should not return the reference of original instance variable.
+    * Instead a new Date object, with content copied to it, should be returned.
+    * */
+    public Date getMutableField() {
+        return new Date(mutableField.getTime());
+    }
+ 
+    @Override
+    public String toString() {
+        return immutableField1 +" - "+ immutableField2 +" - "+ mutableField;
+    }
+}
+
+Now its time to test our class:
+
+	
+class TestMain
+{
+    public static void main(String[] args)
+    {
+        ImmutableClass im = ImmutableClass.createNewInstance(100,"test", new Date());
+        System.out.println(im);
+        tryModification(im.getImmutableField1(),im.getImmutableField2(),im.getMutableField());
+        System.out.println(im);
+    }
+ 
+    private static void tryModification(Integer immutableField1, String immutableField2, Date mutableField)
+    {
+        immutableField1 = 10000;
+        immutableField2 = "test changed";
+        mutableField.setDate(10);
+    }
+}
+ 
+Output: (content is unchanged)
+ 
+100 - test - Tue Oct 30 21:34:08 IST 2012
+100 - test - Tue Oct 30 21:34:08 IST 2012
+
+As it can be seen that even changing the instance variables using their references does not change their value, so the class is immutable.
+
+
+wHY sTRING ARE iMMUTABLE??
+
+1) Security : The first and undeniably most important reason is security. Well, its not only about your application, but even for JDK itself. Java class loading mechanism works on class names passed as parameters, then these classes are searched in class path. Imagine for a minute, Strings were mutable, then anybody could have injected its own class-loading mechanism with very little effort and destroyed or hacked in any application in a minute.
+[ Well, I think in this case java didn't have got any popularity today... :-) and nobody would be using it]. It means Strings were immutable that’s why java is still around in the game.
+
+2) Performance : I believe that it is not the immutability of String class that gives it performance, rather it is string pool which works silently behind the scene. But at the same time, string pool is not a possibility without making String class immutable. So, it all again comes down to immutability of String class which allowed string pools, and thus better performance.
+
+3) Thread safety: Immutable objects are safe when shared between multiple threads in multi-threaded applications. Just understand and learn it. There is no super logic. If something can’t be changed, then even thread can not change it.
+
+As String class is main building block of java programming language, because of its use in class loading mechanism, it was indeed a must use case to prevent the String class from being dirty in case of multiple thread. Immutability does the magic here.
+
+=========================================================================================
+
+Popular HashMap and ConcurrentHashMap interview questions??
+
+
+    How you will design a good key for HashMap?
+    Difference between HashMap and ConcurrentHashMap?
+    Difference between HashMap and Collections.synchronizedMap(HashMap)?
+    Difference between ConcurrentHashMap and Collections.synchronizedMap(HashMap)?
+    Difference between HashMap and HashTable?
+    Difference between HashTable and Collections.synchronized(HashMap)?
+    Impact of random/fixed hashCode() value for key?
+    Using HashMap in non-synchronized code in multi-threaded application?
+
+
+1) How to design a good key for HashMap
+
+I simply answer: “On principle of Hashing“..
+
+Hashing in its simplest form, is a way to assigning a unique code for any variable/object after applying any formula/algorithm on its properties. A true Hashing function must follow this rule:
+
+Hash function should return the same hash code each and every time, when function is applied on same or equal objects. In other words, two equal objects must produce same hash code consistently.
+
+Note: All objects in java inherit a default implementation of hashCode() function defined in Object class. This function produce hash code by typically converting the internal address of the object into an integer, thus producing different hash codes for all different objects.
+
+
+So, there must be some mechanism in HashMap to store this key value pair. Answer is YES. HashMap has an inner class Entry, which looks like this:
+
+static class Entry implements Map.Entry
+{
+        final K key;
+        V value;
+        Entry next;
+        final int hash;
+        ...//More code goes here
+}
+
+
+What put() method actually does:::::::
+
+Before going into put() method’s implementation, it is very important to learn that instances of Entry class are stored in an array. HashMap class defines this variable as:
+
+   /**
+     * The table, resized as necessary. Length MUST Always be a power of two.
+     */
+    transient Entry[] table;
+
+
+
+
+Now look at code implementation of put() method:
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+	
+/**
+     * Associates the specified value with the specified key in this map. If the
+     * map previously contained a mapping for the key, the old value is
+     * replaced.
+     *
+     * @param key
+     *            key with which the specified value is to be associated
+     * @param value
+     *            value to be associated with the specified key
+     * @return the previous value associated with <tt>key</tt>, or <tt>null</tt>
+     *         if there was no mapping for <tt>key</tt>. (A <tt>null</tt> return
+     *         can also indicate that the map previously associated
+     *         <tt>null</tt> with <tt>key</tt>.)
+     */
+    public V put(K key, V value) {
+        if (key == null)
+            return putForNullKey(value);
+        int hash = hash(key.hashCode());
+        int i = indexFor(hash, table.length);
+        for (Entry<k , V> e = table[i]; e != null; e = e.next) {
+            Object k;
+            if (e.hash == hash && ((k = e.key) == key || key.equals(k))) {
+                V oldValue = e.value;
+                e.value = value;
+                e.recordAccess(this);
+                return oldValue;
+            }
+        }
+ 
+        modCount++;
+        addEntry(hash, key, value, i);
+        return null;
+    }
+
+Lets note down the steps one by one:
+
+-- First of all, key object is checked for null. If key is null, value is stored in table[0] position. Because hash code for null is always 0.
+
+-- Then on next step, a hash value is calculated using key’s hash code by calling its hashCode() method. This hash value is used to calculate index in array for storing Entry object. JDK designers well assumed that there might be some poorly written hashCode() functions that can return very high or low hash code value. To solve this issue, they introduced another hash() function, and passed the object’s hash code to this hash() function to bring hash value in range of array index size.
+
+-- Now indexFor(hash, table.length) function is called to calculate exact index position for storing the Entry object.
+
+-- Here comes the main part. Now, as we know that two unequal objects can have same hash code value, how two different objects will be stored in same array location [called bucket].
+Answer is LinkedList. If you remember, Entry class had an attribute “next”. This attribute always points to next object in chain. This is exactly the behavior of LinkedList.
+
+So, in case of collision, Entry objects are stored in LinkedList form. When an Entry object needs to be stored in particular index, HashMap checks whether there is already an entry?? If there is no entry already present, Entry object is stored in this location.
+
+If there is already an object sitting on calculated index, its next attribute is checked. If it is null, and current Entry object becomes next node in LinkedList. If next variable is not null, procedure is followed until next is evaluated as null.
+
+What if we add the another value object with same key as entered before. Logically, it should replace the old value. How it is done? Well, after determining the index position of Entry object, while iterating over LinkedList on calculated index, HashMap calls equals method on key object for each Entry object. All these Entry objects in LinkedList will have similar hash code but equals() method will test for true equality. If key.equals(k) will be true then both keys are treated as same key object. This will cause the replacing of value object inside Entry object only.
+
+In this way, HashMap ensure the uniqueness of keys
+
+
+How get() methods works internally::::
+
+Answer we already should know that the way key uniqueness is determined in put() method , same logic is applied in get() method also. The moment HashMap identify exact match for the key object passed as argument, it simply returns the value object stored in current Entry object.
+
+If no match is found, get() method returns null.
+
+
+public V get(Object key) {
+        if (key == null)
+            return getForNullKey();
+        int hash = hash(key.hashCode());
+        for (Entry<k , V> e = table[indexFor(hash, table.length)]; e != null; e = e.next) {
+            Object k;
+            if (e.hash == hash && ((k = e.key) == key || key.equals(k)))
+                return e.value;
+        }
+        return null;
+    }
+
+
+
+Key object’s hashCode() is required to calculate the index location of Entry object.
+Key object’s equals() method is used to maintain uniqueness of Keys in map.
+Value object’s hashCode() and equals() method are not used in HashMap’s get() and put() methods.
+Hash code for null keys is always zero, and such Entry object is always stored in zero index in Entry[].
+========================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======================================================================================
+
+
+Working with hashCode and equals methods in java::::::
+
+hashCode() and equals() methods have been defined in Object class which is parent class for java objects. For this reason, all java objects inherit a default implementation of these methods.
+
+Usage of hashCode() and equals():::::::::
+
+hashCode() method is used to get a unique integer for given object. This integer is used for determining the bucket location, when this object needs to be stored in some HashTable like data structure. By default, Object’s hashCode() method returns and integer representation of memory address where object is stored.
+
+
+equals() method, as name suggest, is used to simply verify the equality of two objects.  Default implementation simply check the object references of two objects to verify their equality.
+
+
+Overriding the default behavior:::::::::
+
+Lets take an example where your application has Employee object. Lets create a minimal possible structure of Employee class::
+
+public class Employee
+{
+    private Integer id;
+    private String firstname;
+    private String lastName;
+    private String department;
+
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    public String getFirstname() {
+        return firstname;
+    }
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+    public String getLastName() {
+        return lastName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    public String getDepartment() {
+        return department;
+    }
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+}
+
+Above Employee class has some very basic attributes and there accessor methods. Now consider a simple situation where you need to compare two employee objects.
+
+public class EqualsTest {
+    public static void main(String[] args) {
+        Employee e1 = new Employee();
+        Employee e2 = new Employee();
+
+        e1.setId(100);
+        e2.setId(100);
+        //Prints false in console
+        System.out.println(e1.equals(e2));
+    }
+}
+
+No prize for guessing. Above method will print “false“. But, is it really correct after knowing that both objects represent same employee. In a real time application, this must return true.
+
+To achieve correct behavior, we need to override equals method as below:
+
+public boolean equals(Object o) {
+        if(o == null)
+        {
+            return false;
+        }
+        if (o == this)
+        {
+           return true;
+        }
+        if (getClass() != o.getClass())
+        {
+            return false;
+        }
+        Employee e = (Employee) o;
+        return (this.getId() == e.getId());
+}
+
+Add this method to your Employee class, and EqualsTest will start returning “true“.
+
+So are we done? Not yet. Lets test again above modified Employee class in different way.
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class EqualsTest
+{
+    public static void main(String[] args)
+    {
+        Employee e1 = new Employee();
+        Employee e2 = new Employee();
+
+        e1.setId(100);
+        e2.setId(100);
+
+        //Prints 'true'
+        System.out.println(e1.equals(e2));
+
+        Set employees = new HashSet();
+        employees.add(e1);
+        employees.add(e2);
+        //Prints two objects
+        System.out.println(employees);
+    }
+}
+
+Above class prints two objects in second print statement. If both employee objects have been equal, in a Set which stores only unique objects, there must be only one instance inside HashSet, after all both objects refer to same employee. What is it we are missing??
+
+We are missing the second important method hashCode(). As java docs say, if you override equals() method then you must override hashCode() method. So lets add another method in our Employee class.
+
+@Override
+ public int hashCode()
+ {
+    final int PRIME = 31;
+    int result = 1;
+    result = PRIME * result + getId();
+    return result;
+ }
+
+Once above method is added in Employee class, the second statement start printing only single object in second statement, and thus validating the true equality of e1 and e2.
+
+
+========================================================================================
+
+
+Difference between sleep() and wait()?
+
+sleep() is a method which is used to hold the process for few seconds or the time you wanted but in case of wait() method thread goes in waiting state and it won’t come back automatically until we call the notify() or notifyAll().
+
+The major difference is that wait() releases the lock or monitor while sleep() doesn’t releases any lock or monitor while waiting. Wait is used for inter-thread communication while sleep is used to introduce pause on execution, generally.
+
+Thread.sleep() sends the current thread into the “Not Runnable” state for some amount of time. The thread keeps the monitors it has acquired — i.e. if the thread is currently in a synchronized block or method no other thread can enter this block or method. If another thread calls t.interrupt() it will wake up the sleeping thread. Note that sleep is a static method, which means that it always affects the current thread (the one that is executing the sleep method). A common mistake is to call t.sleep() where t is a different thread; even then, it is the current thread that will sleep, not the t thread.
+
+
+
+object.wait() sends the current thread into the “Not Runnable” state, like sleep(), but with a twist. Wait is called on an object, not a thread; we call this object the “lock object.” Before lock.wait() is called, the current thread must synchronize on the lock object; wait() then releases this lock, and adds the thread to the “wait list” associated with the lock. Later, another thread can synchronize on the same lock object and call lock.notify(). This wakes up the original, waiting thread. Basically, wait()/notify() is like sleep()/interrupt(), only the active thread does not need a direct pointer to the sleeping thread, but only to the shared lock object.
+
+
+synchronized(LOCK) {   
+    Thread.sleep(1000); // LOCK is held
+}
+
+synchronized(LOCK) {   
+    LOCK.wait(); // LOCK is not held
+}
+
+
+Let categorize all above points :
+
+Call on:
+
+        wait(): Call on an object; current thread must synchronize on the lock object.
+        sleep(): Call on a Thread; always currently executing thread.
+
+Synchronized:
+
+        wait(): when synchronized multiple threads access same Object one by one.
+        sleep(): when synchronized multiple threads wait for sleep over of sleeping thread.
+
+Hold lock:
+
+        wait(): release the lock for other objects to have chance to execute.
+        sleep(): keep lock for at least t times if timeout specified or somebody interrupt.
+
+Wake-up condition:
+
+        wait(): until call notify(), notifyAll() from object
+        sleep(): until at least time expire or call interrupt().
+
+Usage:
+
+        sleep(): for time-synchronization and;
+        wait(): for multi-thread-synchronization.
+
+
+======================================================================================
+
+How SubString in Java works::
+
+If you look substring method inside String class, you will figure out that it calls String (int offset, int count, char value []) constructor to create new String object. What is interesting here is, value[], which is the same character array used to represent original string. So what's wrong with this?
+
+In case If you have still not figured it out, If the original string is very long, and has array of size 1GB, no matter how small a substring is, it will hold 1GB array.  This will also stop original string to be garbage collected, in case if doesn't have any live reference. This is clear case of memory leak in Java, where memory is retained even if it's not required. That's how substring method creates memory leak.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

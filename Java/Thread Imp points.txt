@@ -1,0 +1,82 @@
+Threasd is LW sub process,smallest unit of processin..independent from other thread execution..
+
+new->runnable(i.e t.start() invoked)-->running ->terminate..
+			-->Non-runnable(blocked) --> runnable
+
+
+
+can we run thread twice: no
+
+Thread creation:
+anonymous
+implemnt Runnable : public void run
+class M implements Runnable{
+public void run(){}  }
+public staic void main(){
+Thread t=new Thread(new M())
+
+extends Thread class : public void run() :
+class M extends Thread{}: its object ids direct thread.
+
+Thread(),Thread(String name),Thread(Runnable r),Thread(Runnable r,"Name")
+
+MEthds:
+Thread.currentThread()
+t.suspend(),t.resume("from suspende state"),t.stop(),isDaemon,setDaemon("true"),isInterupted(),isAlive(),join(),setPriority(),getName(),setName(),sleep(),run()..
+
+
+Joining a thread: 
+t.join() : wait till this gets over ..no other will start even if Thread.sleep() is invoked on him..
+
+t.isALive() : test whether its running or not..
+
+t.join(1500): this thread will run for initial 1.5 sec..
+
+Thread t=Thread.currentThread();/return runing instance
+t.getName();
+
+Sleeping a thread:
+Thread.sleep(100) : will let sleep thread for that time..and meanwhile invoke other waiting thread..
+
+Priority of thread:
+Thread.MIN_PRIORITY i.e 0
+Thread.MAX_PRIORITY i.e 10
+Thread.NORM_PRIORITY i.e 5
+
+t.setPriority(Thread.MAX_PRIORITY) :
+t.start();
+
+t.getName(),t.setName("name"),t.getId()...
+
+shutDownHook() : can be used to do cleanup task before JVM terminate normaly or abruptly..
+Runtime r=Runtime.getInstance();
+r.addShutdownHook( new MyThread());
+r.addShutdownHook(new Runnable(){  void run()...});
+
+What if we call run of thread class directly :
+t.run()...it will be in same stack as normal function and won't create a new stack for thread..
+
+Daemon Thread: only to server user thread..has no other use..
+t.setDaemon("true");   //do this before thread start..
+t.start();
+t.isDaemon(); : true
+
+How to do single task in multiple thread:
+make two class extend thread..have diff run() in it..
+create class to create those class object and start() it..
+
+both will do diff task at same time..
+
+class s1 extens Thread{}
+class s2 extends Thread{}
+class Test { s1 a=new s1();s2 b=new s2();a,b.start().
+}
+
+
+Thread pool:
+ExecutotService and Executors is used for this..
+ExecutotService ex=Executors.newFixedThreadPool(5);pool f 5..
+ex.execute(thread instance);
+ex.shutDown();
+ex.awaitTernination();
+or (while!ex.isTerminated())

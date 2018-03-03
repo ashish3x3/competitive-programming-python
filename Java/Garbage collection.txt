@@ -1,0 +1,15 @@
+
+How to ake it unreferenced :
+by null : e1=null
+by asign to other : emp e1,e2;...e=e2;e1 can be colected
+anonymous object  : new employee()..
+
+finalize() :
+call before object is garbage is garbage collected..
+protected void finalize()..
+
+gc() :
+used to invoke garbage colector..
+in System,Runrime class...
+
+System.gc()..Runtime.gc()..

@@ -1,0 +1,173 @@
+
+
+Check if a number can be expressed as x raised to power y | Set 1,2
+
+1. repeated division by factor from 2 to sqrt(N)... if any one leavs quotient 1, its possible..
+while (factor <= Math.sqrt(a)) {
+            int number = a;
+            while (number % factor == 0) {
+                number /= factor;
+            }
+            if (number == 1) {
+                return true;
+            } else {
+                factor++;
+            }
+2. a = x^y => log a = log x^y => loga = ylogx =>y = log a/log x ... if this from factor 2 to sqrt(N) any return an integer value after dividing, then its possible..
+		if (a == 1)
+            return true;
+        for (int i = 2; i <= Math.sqrt(a); i++) {
+            double value = Math.log(a) / Math.log(i);
+            if ((value - (int) value) < 0.000000001) {
+                return true;
+            }
+        }
+        return false;
+
+http://www.ideserve.co.in/learn/check-if-a-number-can-be-expressed-as-x-raised-to-power-y-set-1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

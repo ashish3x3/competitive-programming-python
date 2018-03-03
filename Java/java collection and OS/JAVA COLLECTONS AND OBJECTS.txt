@@ -1,0 +1,204 @@
+
+string refrence :equal..both pointing to same posiition
+
+String s1 = "Subhash";			
+String s2 = "Subhash";
+
+if( s1 == s2 )
+{
+System.out.println( "Equal" );
+}
+else
+{
+System.out.println( "Unequal" );
+
+--object reference : not equal --both pointing to differrent location
+
+String s1 = new String("Subhash");             
+String s2 = new String("Subhash");
+
+if( s1 == s2 )
+{
+System.out.println( "Equal" );
+}
+else
+{
+System.out.println( "Unequal" )
+
+
+
+
+Java.lang.StringBuffer is the only class in the list that uses the default methods provided by class Object.
+
+All of the collection classes allow you to grow or shrink the size of your collection. ArrayList provides an index to its elements. The newer collection classes tend not to have synchronized methods. Vector is an older implementation of ArrayList functionality and has synchronized methods; it is slower than ArrayList
+
+Hash table based implementation of the Map interface.
+
+An object that maps keys to values. A map cannot contain duplicate keys; each key can map to at most one value,BUT VALUES CAN BE DUPLICATE
+
+
+LinkedHashMap is the collection class used for caching purposes. FIFO is another way to indicate caching behavior. To retrieve LinkedHashMap elements in cached order, use the values() method and iterate over the resultant collection.
+
+
+float f = 1F  correct way of declaring
+
+1) and (2) are incorrect because by contract hashCode() and equals() can't be overridden unless both are overridden
+
+If the equals() method returns true, the hashCode() comparison == must return true
+
+
+if the hashCode() comparison == returns true, the equals() method might return true.
+
+1) is a restatement of the equals() and hashCode() contract. (4) is true because if the hashCode() comparison returns ==, the two objects might or might not be equal.
+
+2) and (3) are incorrect because the hashCode() method is very flexible in its return values, and often two dissimilar objects can return the same hash code value.
+
+if (x3.equals(x4) )  x = x + 10;
+
+then x3.hashCode() == x4.hashCode()	must hold
+
+
+The ListIterator interface extends the Iterator interface and declares additional methods to provide forward and backward iteration capabilities, List modification capabilities, and the ability to determine the position of the iterator in the List asnd not list and iterator both
+
+console>java Test red green blue
+
+args[0] becomes "red", args[1] becomes "green" and args[2] becomes "blue". 
+
+ArrayIndexOutOfBoundsException at runtime.
+
+
+
+package foo; 
+import java.util.Vector; /* Line 2 */
+private class MyVector extends Vector 
+{
+    int i = 1; /* Line 5 */
+    public MyVector() 
+    { 
+        i = 2; 
+    } 
+} 
+public class MyNewVector extends MyVector 
+{
+    public MyNewVector () 
+    { 
+        i = 4; /* Line 15 */
+    } 
+    public static void main (String args []) 
+    { 
+        MyVector v = new MyNewVector(); /* Line 19 */
+    } 
+}
+
+compilation willl fail at line 3
+Option B is correct. The compiler complains with the error "modifier private not allowed here". The class is created private and is being used by another class on line 19. 
+
+
+
+public class Test 
+{ 
+    private static int[] x; 
+    public static void main(String[] args) 
+    { 
+        System.out.println(x[0]); 
+    } 
+}
+
+NullPointerException at runtime
+
+ In the above code the array reference variable x has been declared but it has not been instantiated i.e. the new statement is missing, for example:
+
+private static int[]x = new int[5];
+
+private static int[x] declares a static i.e. class level array.
+
+the "new" keyword is the word that actually creates said array.
+
+int[5] in association with the new sets the size of the array. so since the above code contains no new or size decalarations when you try and access x[0] you are trying to access a member of an array that has been declared but not intialized hence you get a NullPointerException at runtime. 
+
+
+
+
+import java.util.*; 
+class I 
+{
+    public static void main (String[] args) 
+    {
+        Object i = new ArrayList().iterator(); 
+        System.out.print((i instanceof List)+","); 
+        System.out.print((i instanceof Iterator)+","); 
+        System.out.print(i instanceof ListIterator); 
+    } 
+}
+
+Prints: false, true, false
+
+ The iterator() method returns an iterator over the elements in the list in proper sequence, it doesn't return a List or a ListIterator object.
+
+A ListIterator can be obtained by invoking the listIterator method.
+
+
+
+
+
+
+private static float[] f = new float[2];   {0.00,0.00}
+
+
+
+import java.util.*; 
+class H 
+{
+    public static void main (String[] args) 
+    { 
+        Object x = new Vector().elements(); 
+        System.out.print((x instanceof Enumeration)+","); 
+        System.out.print((x instanceof Iterator)+","); 
+        System.out.print(x instanceof ListIterator); 
+    } 
+}
+
+Prints: true,false,false	@
+
+The Vector.elements method returns an Enumeration over the elements of the vector. Vector implements the List interface and extends AbstractList so it is also possible to get an Iterator over a Vector by invoking the iterator or listIterator method.
+
+
+
+TreeSet map = new TreeSet();
+map.add("one");
+map.add("two");
+map.add("three");
+map.add("four");
+map.add("one");
+Iterator it = map.iterator();
+while (it.hasNext() ) 
+{
+    System.out.print( it.next() + " " );
+}
+
+four one three two(in alaphabetic order)
+
+TreeSet assures no duplicate entries; also, when it is accessed it will return elements in natural order, which typically means alphabetical.
+
+
+public static void main(String[] args) 
+{
+    Object obj = new Object() 
+    {
+        public int hashCode() 
+        {
+            return 42;
+        }
+    }; 
+    System.out.println(obj.hashCode()); 
+}
+
+42
+
+This code is an example of an anonymous inner class. They can be declared to extend another class or implement a single interface. Since they have no name you can not use the "new" keyword on them.
+
+In this case the annoynous class is extending the Object class. Within the {} you place the methods you want for that class. After this class has been declared its methods can be used by that object in the usual way e.g. objectname.annoymousClassMethod()
+
+############################################################################
+
+ 

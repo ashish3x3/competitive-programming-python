@@ -1,0 +1,795 @@
+
+
+
+
+
+
+https://www.geeksforgeeks.org/gold-mine-problem/
+
+why started from last column
+
+Because we are doing bottom up DP to calculate the solution which begins from the first column we need to pre-calculate the solutions on which our current solution depends SO beginning from last column already pre-computes the solutions we may need later
+
+
+
+
+
+
+
+=========================================================================================
+
+DP:
+
+Intro
+http://edusagar.com/questions/dynamic-programming
+
+
+
+
+
+Maximum size square sub-matrix with all 1s(i,j contains right botom value of square matrix length )
+http://www.ideserve.co.in/learn/maximum-size-square-sub-matrix-with-all-1s
+
+Find minimum edit distance between given two strings
+			else if (str1.charAt(m-1) == str2.charAt(n-1))
+                {
+                    distanceTable[m][n] = distanceTable[m-1][n-1];
+                }
+
+                /*
+                 * else use minimum of following three cases:
+                 * delete last character of str1 and check distance: distance(str1, str2, m-1, n)
+                 * insert last character of str2 into str1 and check distance: distance(str1, str2, m, n-1)
+                 * replace last char of str1 with last char of str2 and check distance: distance(str1, str2, m-1, n-1)
+                 */
+                else
+                {
+                    distanceTable[m][n] = min (
+                                                1 + distanceTable[m-1][n],
+                                                1 + distanceTable[m][n-1],
+                                                1 + distanceTable[m-1][n-1]
+                                              );
+                }
+http://www.ideserve.co.in/learn/edit-distance-dynamic-programming
+
+
+Distinct binary strings of length n with no consecutive 1s(append 0 to string end with 1 and 0 to all)
+if(N < 1)
+			return 0;
+		int C0 = 1;
+		int C1 = 1;
+
+		for(int i=1; i<N; i++)
+		{
+			int temp = C1;
+			C1 = C0;
+			C0 = C0 + temp;
+		}
+
+		return C0 + C1;
+http://www.ideserve.co.in/learn/distinct-binary-strings-of-length-n-with-no-consecutive-1s
+
+
+
+Longest Common Subsequence
+go row by row
+
+for i in range(m+1):
+        for j in range(n+1):
+            if i == 0 or j == 0 :
+                L[i][j] = 0
+            elif X[i-1] == Y[j-1]:
+                L[i][j] = L[i-1][j-1]+1   # whenever there is a match we trim both of them and find lcs of i-1,j-1 i.e diagonal element
+            else:
+                L[i][j] = max(L[i-1][j] , L[i][j-1])  # when it dosen't match, we trim one at a time from both string and check which gives the maximaum
+
+	i = m
+    j = n
+    while i > 0 and j > 0:
+
+        # If current character in X[] and Y are same, then
+        # current character is part of LCS
+        if X[i-1] == Y[j-1]:
+            lcs[index-1] = X[i-1]
+            i-=1
+            j-=1
+            index-=1
+
+        # If not same, then find the larger of two and
+        # go in the direction of larger value
+        elif L[i-1][j] > L[i][j-1]:
+            i-=1
+        else:
+            j-=1
+(\STUDIES\GOOGLE PREP PROGRAMMING\IDeseve\DP\longest_common_subsequence.py)
+http://www.ideserve.co.in/learn/longest-common-subsequence
+http://www.geeksforgeeks.org/printing-longest-common-subsequence/
+
+
+
+Longest Common Substring
+go row by row
+
+for(int i=0; i<len1; i++)
+        {
+            for(int j=0; j<len2; j++)
+            {
+                if(S1.charAt(i) ==  S2.charAt(j))
+                {
+                    if ( i == 0 || j==0)    match[i][j] = 1;
+
+                    else    match[i][j] = match[i-1][j-1] + 1;
+
+                    if(match[i][j] > max) //If you find a longer common substring re-initialize the max count and update the result list.
+                    {
+                        max =  match[i][j];
+                        result = new ArrayList<String>();
+                        result.add(S1.substring(i-max+1, i+1)); //substring starts at i-max+1 and ends at i
+                    }
+                    else if(match[i][j] == max) // else if you find a common substring with the max length, store it in the list.
+                    {
+                        result.add(S1.substring(i-max+1, i+1));
+                    }
+                }
+                else  match[i][j] = 0;
+http://www.ideserve.co.in/learn/longest-common-substring
+
+
+Longest Increasing Subsequence O(n logn)
+(maintain incr seq and parent..append if greater, replace usingb serach if small)
+http://www.ideserve.co.in/learn/longest-increasing-subsequence-nlogn#codeSnippet
+
+
+Longest Increasing Subsequence (O(N^2)) DP
+http://www.geeksforgeeks.org/longest-increasing-subsequence/
+sort the list, and find LCS of both list, it will be LIS
+
+
+Longest Palindromic Substring
+check for each string len, 1,2 separatly and then 3 to n... only half upper diagonal needed
+for ABA, if A.A matches, then update 1,3 of the upper half diagonal... length will change parally in both direction..i.e length 2 string vs 2, 3 vs 3, and n vs n,,and not 1 vs 2,3,4,5 i.e we do this in subsequence but for palindrom we check same length strng
+http://www.ideserve.co.in/learn/longest-palindromic-substring#codeSnippet
+http://www.geeksforgeeks.org/longest-palindromic-substring-set-2/
+
+
+Longest Palindromic Subsequence
+If last and first characters of X are same, then L(0, n-1) = L(1, n-2) + 2.
+Else L(0, n-1) = MAX (L(1, n-1), L(0, n-2)).
+http://www.ideserve.co.in/learn/longest-palindromic-subsequence#codeSnippet
+http://www.geeksforgeeks.org/dynamic-programming-set-12-longest-palindromic-subsequence/
+
+In substring DP problem, we compare 1-1 char, then 2-2 char, and then 3 to n char in DP.. weonly fill upper half diagonal..
+in subsequence DP rpble, we use 1-n, 2-n,.... and fill it
+
+Shortest Palindrome
+reverse the string, append to end, find longest prefix which is also a suffix of the string using KMP, remove suffix from end, and append the remaing reverse string character to begining of string
+http://www.ideserve.co.in/learn/shortest-palindrome
+
+
+Palindrome Min Cut
+Given a string S, find the minimum number of cuts required to separate the string into a set of palindromes.
+find LPstring table, create a aray minCut to store min cut required till 0..ith char of string ..
+for i = 5, we check if L[5][5] is palindorm in table, if it is we put minCut[i] = 0, else mincut[i] = {compare(j=0, j=1..i wheter S[1][i] is substrin or not, if yes add mincut[i] = mincut[j=0]+1 else keep looping with j++)}
+http://www.ideserve.co.in/learn/palindrome-min-cut#codeSnippet
+
+
+Subset Sum Problem
+Time complexity of the above solution is O(sum*n).
+table[arr.len+1][sum+1] will be created..go row by row filling each column..and checking
+subset[i][j] = subset[i][j] || subset[i-1]][j-set[j-1]];
+http://www.ideserve.co.in/learn/subset-sum-dynamic-programming
+http://www.geeksforgeeks.org/dynamic-programming-subset-sum-problem/
+http://algorithms.tutorialhorizon.com/dynamic-programming-subset-sum-problem/
+
+
+Subset Sum Problem with multiple select
+All we are doing here is running a loop for each single element in array, and then crossing to true its multiple using j value as 0...sum..what is does if at end sumarr[sum] = true for any single elemt, it means that elmt can be used multiple times to go tot the number..hence found a sequence with multi select..
+
+and thats y we have aded check with loop sumarr[sum] == false, sice once it is set to true by any individeal value fro array, we are done..
+sum[0] = true;
+    for (int p = 0; !sum[x] && p < S.length; p++) {
+      int e = S[p];
+      for (int q = 0; !sum[x] && q <= x; q++) {
+        if (q + e <= x && sum[q]) {
+          sum[q + e] = true;
+        }
+      }
+    }
+    return sum[x];
+run loop for outer arr elem, and check multiple of sum from 0..sum to true if its a multiple.if any outer lem is able too do it, it will be match
+http://www.geekviewpoint.com/java/dynamic_programming/subset_sum_multiple_supplies
+
+
+
+Count number of binary strings without consecutive 1’s
+http://www.geeksforgeeks.org/count-number-binary-strings-without-consecutive-1s/
+http://www.ideserve.co.in/learn/distinct-binary-strings-of-length-n-with-no-consecutive-1s
+
+
+
+To print maximum number of As using four keys of special keyboard.
+http://www.ideserve.co.in/learn/print-maximum-number-of-a-using-four-keys-of-special-keyboard#codeSnippet
+http://edusagar.com/questions/dynamic-programming/maximum-number-of-a-using-ctrl-a-ctrl-c-ctrl-v-keys-google-interview-question
+
+
+
+
+Find largest sub-square matrix with all 0s (Microsoft interview question)
+F[i][j] = 1 + MIN(F[i-1][j], F[i-1][j-1], F[i][j-1]) if F[i][j] = 1
+F[i][j] = 0 otherwise
+http://edusagar.com/questions/dynamic-programming/find-largest-sub-square-matrix-with-all-0s
+
+
+Binomial Coefficient
+C(n, k) = C(n-1, k-1) + C(n-1, k)
+   C(n, 0) = C(n, n) = 1
+http://www.geeksforgeeks.org/dynamic-programming-set-9-binomial-coefficient/
+
+
+0-1 Knapsack Problem
+http://www.geeksforgeeks.org/knapsack-problem/
+http://www.ideserve.co.in/learn/dynamic-programming-0-1-knapsack-problem
+
+
+Matrix chain multiplication:
+	(AB)C = (10×30×5) + (10×5×60) = 1500 + 3000 = 4500 operations
+    A(BC) = (30×5×60) + (10×30×60) = 9000 + 18000 = 27000 operations.
+    p = = [p0,p1,p2,p3,p4,p5..] ==> [4,10,3,12,20,7] ==> A1 = 4*10, A2 = 10*3 A3 = 3*12...
+
+    M[i][j]  = {	0  	if i=j,
+    				min(i <= k < j)  { M[i][k] + M[k+1][j] + p(i-1)*p(k)*p(j) }
+    			}
+    we fill diagonally, for upper half
+    m[i][i] = 0; cost is zero when multiplying one matrix.
+http://www.geeksforgeeks.org/dynamic-programming-set-8-matrix-chain-multiplication/
+http://www.geeksforgeeks.org/printing-brackets-matrix-chain-multiplication-problem/
+http://www.geeksforgeeks.org/minimum-maximum-values-expression/
+
+
+
+Line Break, word wrap, text justification
+given set of words and width margin = M
+aaa bb  by greedy
+cc
+ddddd
+
+aaa     by DP
+bb cc
+ddddd
+
+create cost[i][j] is penalty for keeping i to j in single line.
+create c[i] will have total cost of optimal arrangement of words from 1 to i
+	c[j] = 0 if j=0,
+			min(1<=i<=j) c[i-1]+cost[i][j],  j>0
+
+https://www.youtube.com/watch?v=RORuwHiblPc
+http://www.geeksforgeeks.org/dynamic-programming-set-18-word-wrap/
+
+
+
+Rod cutting
+cutRod(n) = max(price[i] + cutRod(n-i-1)) for all i in {0, 1 .. n-1}
+http://www.geeksforgeeks.org/dynamic-programming-set-13-cutting-a-rod/
+https://www.youtube.com/watch?v=ElFrskby_7M&list=PLyEvk8ZeQDMVbsg7CEfT0NV3s3GkMx1vN&index=7
+
+
+
+Find minimum number of coins that make a given value
+If V == 0, then 0 coins required.
+If V > 0
+   minCoin(coins[0..m-1], V) = min {1 + minCoins(V-coin[i])}
+                               where i varies from 0 to m-1
+                               and coin[i] <= V
+http://www.geeksforgeeks.org/find-minimum-number-of-coins-that-make-a-change/
+https://www.youtube.com/watch?v=rdI94aW6IWw&index=10&list=PLyEvk8ZeQDMVbsg7CEfT0NV3s3GkMx1vN
+
+
+
+Word Break Problem Dynamic Programming
+Word Break Problem using Backtracking
+
+str.substr(i, j-i) means sub string starting from i and of length j-i.. so we canot be N in the end as tha will cause overflow..
+
+1. Recursive implementation:
+we consider each prefix and search it in dictionary. If the prefix is present in dictionary, we recur for rest of the string (or suffix). If the recursive call for suffix returns true, we return true, otherwise we try next prefix. If we have tried all prefixes and none of them resulted in a solution, we return false.
+int size = str.size();
+    // Base case
+    if (size == 0)  return true;
+    // Try all prefixes of lengths from 1 to size
+    for (int i=1; i<=size; i++)
+    {
+        // Then we recursively check for remaining string str.substr(i, size-i) which is suffix of length size-i
+        if (dictionaryContains( str.substr(0, i) ) &&  wordBreak( str.substr(i, size-i) ))
+            return true;
+    }
+
+3. backtracking
+We start scanning the sentence from left. As we find a valid word, we need to check whether rest of the sentence can make valid words or not. Because in some situations the first found word from left side can leave a remaining portion which is not further separable.
+for (int i=1; i<=n; i++)
+    {
+        //extract substring from 0 to i in prefix
+        string prefix = str.substr(0, i);
+
+        // if dictionary conatins this prefix, then we check for remaining string. Otherwise we ignore this prefix (there is no else for this if) and try next
+        if (dictionaryContains(prefix))
+        {
+            // if no more elements are there, print it
+            if (i == n)
+            {
+                // add this element to previous prefix
+                result += prefix;
+                cout << result << endl; //print result
+                return;
+            }
+            wordBreakUtil(str.substr(i, n-i), n-i,
+                                result + prefix + " ");
+        }
+
+3. DP: Create the DP table to store results of subroblems. The value wb[i]
+    will be true if str[0..i-1] can be segmented into dictionary words,
+     otherwise false.
+
+	if (wb[i] == false && dictionaryContains( str.substr(0, i) ))
+            wb[i] = true;
+	if (wb[i] == true)
+        {
+            // If we reached the last prefix
+            if (i == size)
+                return true;
+
+            for (int j = i+1; j <= size; j++)
+            {
+                // Update wb[j] if it is false and can be updated
+                // Note the parameter passed to dictionaryContains() is
+                // substring starting from index 'i' and length 'j-i'
+                // finding the break point.. basically j-i will be from length 1,2,3,4...i.e after prefix till i
+                // match es search for other matches from i+1 to N
+                if (wb[j] == false && dictionaryContains( str.substr(i, j-i) ))
+                    wb[j] = true;
+
+                // If we reached the last character
+                if (j == size && wb[j] == true)
+                    return true;
+            }
+        }
+
+        2.public boolean wordBreakBottomUp(String s, List<String> wordList) {
+        boolean[] T = new boolean[s.length() + 1];
+        Set<String> set = new HashSet<>();
+        for (String word : wordList) {
+            set.add(word);
+        }
+        T[0] = true;
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if(T[j] && set.contains(s.substring(j, i))) {
+                    T[i] = true;
+                    break;
+                }
+            }
+        }
+        return T[s.length()];
+    }
+
+    3. create 2D table, start from length 1, fill upper half diagonal if 0..i is in dict , if present update -1 with i i.e the break point.. else search for breakpoint k from i to end which will make strik and str(k+1,j) both true...store k to str[i,j] in such case..
+    /fill up the matrix in bottom up manner
+        for(int l = 1; l <= word.length(); l++){
+            for(int i=0; i < word.length() -l + 1 ; i++){
+                int j = i + l-1;
+                String str = word.substring(i,j+1);
+                //if string between i to j is in dictionary T[i][j] is true
+                if(dict.contains(str)){
+                    T[i][j] = i;
+                    continue;
+                }
+                //find a k between i+1 to j such that T[i][k-1] && T[k][j] are both true
+                for(int k=i+1; k <= j; k++){
+                    if(T[i][k-1] != -1 && T[k][j] != -1){
+                        T[i][j] = k;
+                        break;
+                    }
+                }
+            }
+        }
+        if(T[0][word.length()-1] == -1){
+            return null;
+        }
+
+https://www.youtube.com/watch?v=WepWFGxiwRs
+http://www.geeksforgeeks.org/dynamic-programming-set-32-word-break-problem/
+http://www.geeksforgeeks.org/word-break-problem-using-backtracking/
+
+
+
+
+
+Maximum Length Chain of Pairs
+For example, if the given pairs are {{5, 24}, {39, 60}, {15, 28}, {27, 40}, {50, 90} }, then the longest chain that can be formed is of length 3, and the chain is {{5, 24}, {27, 40}, {50, 90}}
+https://www.youtube.com/watch?v=v-HIXptqM3Q
+// This function assumes that arr[] is sorted in increasing order
+    // according the first (or smaller) values in pairs.
+    static int maxChainLength(Pair arr[], int n)
+    {
+       int i, j, max = 0;
+       int mcl[] = new int[n];
+
+       /* Initialize MCL (max chain length) values for all indexes */
+       for ( i = 0; i < n; i++ )
+          mcl[i] = 1;
+
+       /* Compute optimized chain length values in bottom up manner */
+       for ( i = 1; i < n; i++ )
+          for ( j = 0; j < i; j++ )
+             if ( arr[i].a > arr[j].b && mcl[i] < mcl[j] + 1)
+                mcl[i] = mcl[j] + 1;
+
+       // mcl[i] now stores the maximum chain length ending with pair i
+
+       /* Pick maximum of all MCL values */
+       for ( i = 0; i < n; i++ )
+          if ( max < mcl[i] )
+             max = mcl[i];
+
+       return max;
+    }
+
+
+
+
+Subset Sum Problem Dynamic Programming
+Given a set of non negative numbers and a total, find if there exists a  subset in this set whose sum is same as total.
+
+isSubsetSum(set, n, sum) = isSubsetSum(set, n-1, sum) ||
+                           isSubsetSum(set, n-1, sum-set[n-1])
+Base Cases:
+isSubsetSum(set, n, sum) = false, if sum > 0 and n == 0
+isSubsetSum(set, n, sum) = true, if sum == 0
+
+P(i,j) = i if a subset of number from (A[0]..A[i]) having sum j
+P(i,j) = 1, if P(i-1,j) = 1 OR       // ith elme not included
+				P(i-1,j-Ai) = 1      // ith elem included
+
+formally P(i,j)  = Max(P(i-1,j), P(i-1, j-Ai))
+
+corner case : P(i,0) = 1 bcz I will not chose any elem and have sum 0
+				P(o,j) = 0 bcz I have no elem to chose to make sum J
+
+Go row wiese left to right
+
+ make row and clume with row = numbers till Sum(0,1,2,3...S) and colume with array values(2,4,7,9)
+ now we have to find if its possibel to make column sum with row values(0..i) if we r at ith row and jth colum...
+ if its possible to make 11 from 2,3... we check if T[i-1[11-3]] is true or not..
+ for (int i = 0; i <= input.length; i++) {
+            T[i][0] = true;
+        }
+
+        for (int i = 1; i <= input.length; i++) {
+            for (int j = 1; j <= total; j++) {
+                if (j - input[i - 1] >= 0) {
+                    T[i][j] = T[i - 1][j] || T[i - 1][j - input[i - 1]];
+                } else {
+                    T[i][j] = T[i-1][j];
+                }
+            }
+        }
+        return T[input.length][total];
+https://www.youtube.com/watch?v=s6FhG--P7z0
+http://www.geeksforgeeks.org/dynamic-programming-subset-sum-problem/
+
+
+
+
+
+Partition problem is to determine whether a given set can be partitioned into two subsets such that the sum of elements in both subsets is same.
+
+Examples
+
+arr[] = {1, 5, 11, 5}
+Output: true
+The array can be partitioned as {1, 5, 5} and {11}
+
+arr[] = {1, 5, 3}
+Output: false
+The array cannot be partitioned into equal sum sets.
+
+-- if U can find subset for sum/2 in array, obviously there would be 2Sum/2 = Sum..so U have find a partiosn..
+
+Following are the two main steps to solve this problem:
+1) Calculate sum of the array. If sum is odd, there can not be two subsets with equal sum, so return false.
+2) If sum of array elements is even, calculate sum/2 and find a subset of array with sum equal to sum/2.
+
+// Returns true if arr[] can be partitioned in two
+//  subsets of equal sum, otherwise false
+bool findPartiion (int arr[], int n)
+{
+    // Calculate sum of the elements in array
+    int sum = 0;
+    for (int i = 0; i < n; i++)
+       sum += arr[i];
+
+    // If sum is odd, there cannot be two subsets
+    // with equal sum
+    if (sum%2 != 0)
+       return false;
+
+    // Find if there is subset with sum equal to
+    // half of total sum
+    return isSubsetSum (arr, n, sum/2);
+}
+
+Time Complexity: O(2^n) In worst case, this solution tries two possibilities (whether to include or exclude) for every element.
+
+DP approach like previous prob
+Time Complexity: O(sum*n)
+Auxiliary Space: O(sum*n)
+
+http://www.geeksforgeeks.org/dynamic-programming-set-18-partition-problem/
+
+
+
+
+0/1 Knapsack Problem
+same as subset problem... go row wise..
+formally P(i,j)  = Max(P(i-1,j), P(i-1, j-Ai))
+
+corner case : P(i,0) = 1 bcz I will not chose any elem and have sum 0
+				P(o,j) = 0 bcz I have no elem to chose to make sum J
+
+int K[][] = new int[val.length+1][W+1];
+        for(int i=0; i <= val.length; i++){
+            for(int j=0; j <= W; j++){
+                if(i == 0 || j == 0){
+                    K[i][j] = 0;
+                    continue;
+                }
+                if(j - wt[i-1] >= 0){
+                    K[i][j] = Math.max(K[i-1][j], K[i-1][j-wt[i-1]] + val[i-1]);
+                }else{
+                    K[i][j] = K[i-1][j];
+                }
+            }
+        }
+        return K[val.length][W];
+https://www.youtube.com/watch?v=8LusJS5-AGo&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr
+
+
+Maximum sum rectangle in a 2D matrix
+// start from left row and move toward right columns... ad find the max sum using kadane for each temp row creatd using row[0..i][constant col]
+for(int left = 0; left < cols ; left++){
+            for(int i=0; i < rows; i++){
+                temp[i] = 0;
+            }
+            for(int right = left; right < cols; right++){
+                for(int i=0; i < rows; i++){
+                    temp[i] += input[i][right];
+                }
+                KadaneResult kadaneResult = kadane(temp);
+                if(kadaneResult.maxSum > result.maxSum){
+                    result.maxSum = kadaneResult.maxSum;
+                    result.leftBound = left;
+                    result.rightBound = right;
+                    result.upBound = kadaneResult.start;
+                    result.lowBound = kadaneResult.end;
+                }
+           }
+ // Kadane    : kadane dosen't handle all array -ve no well, see python imp function for compe.prog.. Or max_subarra_cont_kadane in IDESREVE/DP section notes
+for(int i=0; i < arr.length; i++){
+            maxSoFar += arr[i];
+            if(maxSoFar < 0){
+                maxSoFar = 0;
+                currentStart = i+1;
+            }
+            if(max < maxSoFar){
+                maxStart = currentStart;
+                maxEnd = i;
+                max = maxSoFar;
+            }
+//support all -ve no also
+def maxSubArraySum(a,size):
+
+    max_so_far =a[0]
+    curr_max = a[0]
+
+    for i in range(1,size):
+        curr_max = max(a[i], curr_max + a[i])
+        max_so_far = max(max_so_far,curr_max)
+
+    return max_so_far
+https://www.youtube.com/watch?v=yCQN096CwWM
+https://github.com/mission-peace/interview/blob/master/src/com/interview/dynamic/SubRectangularMatrixWithMaximumSum.java
+http://www.geeksforgeeks.org/dynamic-programming-set-27-max-sum-rectangle-in-a-2d-matrix/
+
+
+
+
+
+
+Recursion: Solving a Maze
+https://www.cs.bu.edu/teaching/alg/maze/
+FIND-PATH(x, y)
+
+if (x,y outside maze) return false
+if (x,y is goal) return true
+if (x,y not open) return false
+mark x,y as part of solution path
+if (FIND-PATH(North of x,y) == true) return true
+if (FIND-PATH(East of x,y) == true) return true
+if (FIND-PATH(South of x,y) == true) return true
+if (FIND-PATH(West of x,y) == true) return true
+unmark x,y as part of solution path
+return false
+
+Using Algorithm
+
+To use FIND-PATH to find and mark a path from the start to the goal with our given representation of mazes, we just need to:
+Locate the start position (call it startx, starty).
+Call FIND-PATH(startx, starty).
+Re-mark* the start position with 'S'.
+*In the algorithm, the start position (marked 'S') needs to be considered an open position and must be marked as part of the path for FIND-PATH to work correctly. That is why we re-mark it at the end.
+
+
+
+To store sub problems we would use a two dimensional table.
+Each cell Table(i,j) will store no of paths which are possible to reach cell(i,j). Our answer will be then table(m,n).
+
+Cell (i,j) can be reached at by either coming from (i-1,j) (Moving down)
+           or by coming from cell (i,j-1) (Moving right)
+           or by coming from cell (i-1, j-1) (Moving diagonally).
+
+So our Table(i,j) can be calculated as
+
+Table(i,j) = Table(i-1,j) + Table(i,j-1)+ table(i-1,j-1)
+
+Also, to reach any cell in first column is 1 and cell in first row is also 1. Hence,
+
+Table(i,0) = Table(0,j) =1
+https://algorithmsandme.in/2014/04/17/dynamic-programming-count-all-possible-paths-in-maze/
+
+
+
+http://www.techiedelight.com/find-total-number-unique-paths-maze-source-destination/
+
+
+
+
+
+Finding Minimum Cost Path in a 2D Matrix
+Given a 2D matrix, Cost[][], where Cost[i][j] represent the cost of visit cell Cost[i][j], find minimum cost to reach a given cell Cost[n][m], where a cell can be reach from it’s left (by moving one step right) or from top (by moving one step down).
+https://algorithmsandme.in/2017/08/29/find-minimum-cost-path-in-a-2d-matrix-dp/
+
+findCost(i,j, cost) = cost(i,j) + Min( findCost(i-1,j, cost),
+                                       findCost(i,j-1, cost))
+
+
+Let’s create a two dimensional matrix and fill it up bottom up. Let’s consider the top most row in matrix. Any cell in top most row can be reach only from left.
+
+MinCost(0,j) = MinCost(0,j-1) + Cost[0][j]
+Similarly, cell in leftmost column can only be reached from top.
+
+MinCost(i,0) = MinCost(i-1,0) + Cost[i][0]
+For all other cells,
+
+MinCost(i,j) = Min( MinCost(i-1),j), MinCost(i, j-1)) + Cost[i][j]
+
+MinCost[0][0] = Cost[0][0];
+
+    // initialize first row of MinCost matrix
+    for (int i=1; i<N; i++){
+        MinCost[0][i] = MinCost[0][i-1] + Cost[0][i];
+    }
+
+    for (int i=1; i<M; i++){
+        MinCost[i][0] = MinCost[i-1][0] + Cost[i][0];
+    }
+
+    for (int i=1;i<M; i++){
+        for (int j=1; j<N; j++){
+           MinCost[i][j] = min(MinCost[i-1][j],
+                           MinCost[i][j-1]) + Cost[i][j];
+        }
+    }
+
+    return MinCost[M-1][N-1];
+
+def numberOfPaths(m, n):
+    # Create a 2D table to store
+    # results of subproblems
+    count = [[0 for x in range(m)] for y in range(n)]
+
+    # Count of paths to reach any
+    # cell in first column is 1
+    for i in range(m):
+        count[i][0] = 1;
+
+    # Count of paths to reach any
+    # cell in first column is 1
+    for j in range(n):
+        count[0][j] = 1;
+
+    # Calculate count of paths for other
+    # cells in bottom-up
+    # manner using the recursive solution
+    for i in range(1, m):
+        for j in range(n):
+            count[i][j] = count[i-1][j] + count[i][j-1]
+    return count[m-1][n-1]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===========================================================================================
+
+
+
+
+Find four elements a, b, c and d in an array such that a+b = c+d
+http://edusagar.com/articles/view/75/interview-question-array-find-values-satisfy-a-b-c-d#at_pco=smlwn-1.0&at_si=599009f9a93f5812&at_ab=per-2&at_pos=0&at_tot=1
+http://www.geeksforgeeks.org/find-four-elements-a-b-c-and-d-in-an-array-such-that-ab-cd/?qa-rewrite=3921/find-index-values-that-satisfy-where-integers-values-array
+
+
+
+Find all pairs (a,b) and (c,d) in array which satisfy ab = cd
+similar concept as a+b=c+d
+http://www.geeksforgeeks.org/find-pairs-ab-cd-array-satisfy-ab-cd/
+
+
+Strings:
+Knuth–Morris–Pratt (KMP) Pattern Matching
+https://www.youtube.com/watch?v=t4xUA-aHzy8
+
+
+
+
+Shortest Palindrome
+http://www.ideserve.co.in/learn/shortest-palindrome
+
+
+
+
+
+Subset:
+Longest Subset With Consecutive Numbers (Map)
+http://www.ideserve.co.in/learn/longest-subset-with-consecutive-numbers
+
+
+Find four elements that sum to a given value | Set 1 (n^3 solution)
+http://www.geeksforgeeks.org/?p=23327
+
+Given an array A[] and a number x, check for pair in A[] with sum as x
+http://www.geeksforgeeks.org/?p=484
+
+
+Find four elements that sum to a given value | Set 2 ( O(n^2Logn) Solution)
+similar to a+b=c+d lexography order approach..store sum in a array, find 2 with same sum and difrent iindex..that abcd
+http://www.geeksforgeeks.org/find-four-elements-that-sum-to-a-given-value-set-2/
+
+
+Total number of possible Binary Search Trees with 'n' keys
+f(n) = total number of BSTs with '1' as root + total number of BSTs with '2' as root + ... + total number of BSTs with 'n' as root
+     = f(0)f(n-1) + f(1)f(n-2) + f(2)f(n-3) + ... + f(n-2)f(1) + f(n-1)f(0)
+http://www.ideserve.co.in/learn/total-number-of-possible-binary-search-trees-with-n-keys#codeSnippet
+
+
+
+What is pseudopolynomial time? How does it differ from polynomial time?
+https://stackoverflow.com/questions/19647658/what-is-pseudopolynomial-time-how-does-it-differ-from-polynomial-time

@@ -1,0 +1,207 @@
+string refrence :equal..both pointing to same posiition
+
+String s1 = "Subhash";			
+String s2 = "Subhash";
+
+if( s1 == s2 )
+{
+System.out.println( "Equal" );
+}
+else
+{
+System.out.println( "Unequal" );
+
+--object reference : not equal --both pointing to differrent location
+
+String s1 = new String("Subhash");             
+String s2 = new String("Subhash");
+
+if( s1 == s2 )
+{
+System.out.println( "Equal" );
+}
+else
+{
+System.out.println( "Unequal" )
+
+float f = 1F  correct way of declaring
+
+If the equals() method returns true, the hashCode() comparison == must return true
+
+if the hashCode() comparison == returns true, the equals() method might return true.
+
+if (x3.equals(x4) )  x = x + 10;
+
+then x3.hashCode() == x4.hashCode()	must hold
+
+
+console>java Test red green blue
+
+args[0] becomes "red", args[1] becomes "green" and args[2] becomes "blue". 
+
+
+class I 
+{
+    public static void main (String[] args) 
+    {
+        Object i = new ArrayList().iterator(); 
+        System.out.print((i instanceof List)+","); 
+        System.out.print((i instanceof Iterator)+","); 
+        System.out.print(i instanceof ListIterator); 
+    } 
+}
+
+Prints: false, true, false
+
+private static float[] f = new float[2];   {0.00,0.00}
+
+
+class H 
+{
+    public static void main (String[] args) 
+    { 
+        Object x = new Vector().elements(); 
+        System.out.print((x instanceof Enumeration)+","); 
+        System.out.print((x instanceof Iterator)+","); 
+        System.out.print(x instanceof ListIterator); 
+    } 
+}
+
+Prints: true,false,false	@
+
+The Vector.elements method returns an Enumeration over the elements of the vector. Vector implements the List interface and extends AbstractList so it is also possible to get an Iterator over a Vector by invoking the iterator or listIterator method.
+
+
+TreeSet map = new TreeSet();
+map.add("one");
+map.add("two");
+map.add("three");
+map.add("four");
+map.add("one");
+Iterator it = map.iterator();
+while (it.hasNext() ) 
+{
+    System.out.print( it.next() + " " );
+}
+
+four one three two(in alaphabetic order)
+
+TreeSet assures no duplicate entries; also, when it is accessed it will return elements in natural order, which typically means alphabetical.
+
+Anonymous inner class:
+
+public static void main(String[] args) 
+{
+    Object obj = new Object() 
+    {
+        public int hashCode() 
+        {
+            return 42;
+        }
+    }; 
+    System.out.println(obj.hashCode()); 
+}
+
+42
+
+This code is an example of an anonymous inner class. They can be declared to extend another class or implement a single interface. Since they have no name you can not use the "new" keyword on them.
+
+In this case the annoynous class is extending the Object class. Within the {} you place the methods you want for that class. After this class has been declared its methods can be used by that object in the usual way e.g. objectname.annoymousClassMethod()
+
+---------------------------------------------------------
+
+Array is the only collection type built in Java.
+
+Arrays.toString – fine-print the array contents. 
+
+Arrays.equals – only comnpare reference
+
+Arrays.binarySearch – fast lookup in a sorted array or its subsection. 
+
+
+Finally, we need to mention that any Collection could be copied into an array using T[] Collection.toArray( T[] a ) method. The usual pattern of this method call:
+
+    
+
+    return coll.toArray( new T[ coll.size() ] );
+
+LinkedList – Deque implementation
+
+
+If you want a Queue/Deque implementation (you need to access only first and last elements) – consider using ArrayDeque instead.
+
+
+Vector –
+
+ a prehistoric version of ArrayList with all synchronized methods. Use ArrayList instead. 
+
+ArrayDeque 
+Deque implementation based on the array (circular buffer) with head/tail pointers. Unlike LinkedList, this class does not implement List interface, which means that you can not access anything except the first and the last elements. This class is generally preferable to LinkedList for queues/deques due to a limited amount of garbage it generates (old array will be discarded on the extensions).
+
+
+
+Stack – 
+
+
+a LIFO queue. Do not use it in the production code. Use any Deque implementation instead (ArrayDeque is preferable).
+
+
+PriorityQueue – 
+
+a queue based on the priority heap. Uses either natural ordering or a provided Comparator.
+always return the smallest remaining element in the queue
+
+This queue is generally preferable to other sorted collections, like TreeSet if all you need is a smallest element in the queue.
+
+
+
+HashMap –
+
+ a most popular map implementation. It just maps keys to values and does nothing else. In case of a high quality hashcode method, get/put methods have a constant complexity.
+
+
+EnumMap 
+
+– a map with enum keys. Generally works faster than a HashMap due to a known maximal number of keys and built-in enum to int mapping (it is a fixed size array of values).
+
+
+Hashtable –
+
+ prehistoric synchronized version of a HashMap. Use HashMap in the new production code. 
+
+
+ IdentityHashMap – 
+
+a very special version of a Map, violating the Map general contract: it compares references using == instead of calling Object.equals.
+
+ This property makes IdentityHashMap useful for various graph traversal algorithms – you may easily store already processed nodes in the IdentityHashMap along with some node-related data.
+
+
+LinkedHashMap – 
+
+a combination of a HashMap and a LinkedList – insertion order of all elements is stored inside a LinkedList. That’s why LinkedHashMap entries, keys and values are always iterated in the insertion order. 
+
+This is the most expensive JDK collection in terms of memory consumption per element. 
+
+
+TreeMap – 
+
+a red-black tree based sorted navigable Map. It sorts all entries based on the natural order or a given Comparator of keys. 
+
+This map requires that implementation of equals and Comparable/Comparator.compareTo should be consistent.
+
+ This class implements a NavigableMap interface: it allows getting a map of all entries less than/more than given key; getting a prev/next entry (based on the key ordering); getting a map with a given range of keys (which roughly corresponds to SQL BETWEEN operator) and many variations of these methods. 
+
+
+WeakHashMap – 
+
+
+this map is generally used in data cache implementations. 
+
+It keeps all its keys with WeakReference, which means that these keys may be garbage collected if there are no strong references to the key objects. 
+
+Values, on the other hand, are stored using strong references. 
+
+
+
+

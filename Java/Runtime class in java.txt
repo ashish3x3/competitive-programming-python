@@ -1,0 +1,11 @@
+Runtime r=Runtime.getInstance();
+
+r.exit(1);  --terminate the present JVM
+
+r.addShutdownHook(thread t);
+
+r.exec("notepad") :open notepad in new process.
+
+r.totalmemory(),freeMemory()..
+
+r.availableProcessors()..

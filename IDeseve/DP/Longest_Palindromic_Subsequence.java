@@ -1,0 +1,61 @@
+
+
+http://www.ideserve.co.in/learn/longest-palindromic-subsequence#codeSnippet
+
+
+public class LongestPalindromicSubsequence {
+     
+    public static int LPS(String s) {
+          int n = s.length();
+          int palindrome[][] = new int[n][n]; //Table to store lengths of palindrome subsequences.
+           
+          //Trivial case: single letter palindromes
+          for (int i = 0; i < n; i++) {
+              palindrome[i][i] = 1;
+          }
+           
+          //Finding palindromes of length 2 to n and saving the longest
+          for (int curr_len = 2; curr_len <= n; curr_len++) {
+            for (int i = 0; i < n-curr_len+1; i++) {
+              int j = i+curr_len-1;
+              if (s.charAt(i) == s.charAt(j))//Trim if match and add 2  
+              {
+                palindrome[i][j] = palindrome[i+1][j-1] + 2; 
+              }
+              else //Trim one at a time and take max
+              {
+                palindrome[i][j] = Math.max(palindrome[i+1][j], palindrome[i][j-1]);
+              }
+            }
+          }
+           
+          return palindrome[0][n-1];
+        }
+ 
+    public static void main(String args[])
+    {
+        System.out.println(LPS("LPSSAPAL"));
+    }
+}
+
+
+
+
+// Returns the length of the longest palindromic subsequence in seq
+int lps(char *seq, int i, int j)
+{
+   // Base Case 1: If there is only 1 character
+   if (i == j)
+     return 1;
+ 
+   // Base Case 2: If there are only 2 characters and both are same
+   if (seq[i] == seq[j] && i + 1 == j)
+     return 2;
+ 
+   // If the first and last characters match
+   if (seq[i] == seq[j])
+      return lps (seq, i+1, j-1) + 2;
+ 
+   // If the first and last characters do not match
+   return max( lps(seq, i, j-1), lps(seq, i+1, j) );
+}

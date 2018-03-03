@@ -1,0 +1,20 @@
+ For example, the efficient GC in Java allows for complex highly concurrent programs to run faster than a C++ equivalent
+
+In a world where there are more and more multi-core systems, that's not negligible. Also, the JIT does runtime optimization on usage patterns that can outdo optimization done at compile-time.
+
+Java is a language designed to be portable, 
+
+All the lackings and drawbacks and disadvantages are clarified in its next version.,. As the java has the strong platform., it has no limitations and it has the bright future,.,.
+
+C++ has a performance advantage over java
+
+    Garbage collection built into the language.
+    Synchronization built into the language
+    Threading built into the language
+    A lot more debugging information rolled into the 	binaries, making crashes easier to debug
+    Late linking makes some development and deployment 	smoother.
+    Platform-independent binaries, and rigorous code 	checking, make it possible to safely deploy code 	within another process (e.g. user-supplied 	builtins, application servers)
+
+Some libraries can be obtained for C++ to overcome some of these, though generally in a platform-dependent way, and since libraries will vary from project to project it's harder to reuse code from different paradigms.
+
+ C++ looks increasingly Java-like over time; the latest round even begins to introduce a garbage collection, multithreading, a real null, etc.

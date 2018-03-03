@@ -1,0 +1,53 @@
+
+
+Design a stack that supports getMin() in O(1) time and O(1) extra space
+http://www.geeksforgeeks.org/design-and-implement-special-stack-data-structure/
+http://www.geeksforgeeks.org/design-a-stack-that-supports-getmin-in-o1-time-and-o1-extra-space/
+
+
+
+
+Stack with get minimum
+http://www.dsalgo.com/2013/02/StackMinimum.php.html
+
+
+
+
+Queue minimum using stack
+http://www.dsalgo.com/2013/02/QueueMinUsingStackMin.php.html
+
+
+
+
+Queue using stack
+http://www.dsalgo.com/2013/02/QueueUsingStack.php.html
+
+Sort a stack
+We will recursively pop the stack till it is empty, Then we will try to put the popped number with another recursive function named insertSorted. This will push to the stack if the top of the stack is greater than the number, if it is not, then it will pop the number and call the insertSorted with the popped number and the rest of the stack. After it returns it will push the number in correct place.
+static void sort(Stack stack)
+ {
+  if (stack.isEmpty())
+   return;
+  Integer top = stack.pop();
+  sort(stack);
+  insertSorted(top, stack);
+  return;
+ }
+
+ static void insertSorted(Integer top, Stack stack)
+ {
+  if (stack.isEmpty() || stack.peek() > top)
+  {
+   stack.push(top);
+   return;
+  }
+  Integer smaller = stack.pop();
+  insertSorted(top, stack);
+  stack.push(smaller);
+ }
+}
+http://www.dsalgo.com/2013/02/sort-stack.html
+
+
+
+

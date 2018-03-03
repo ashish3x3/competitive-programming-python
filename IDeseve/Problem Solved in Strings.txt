@@ -1,0 +1,542 @@
+
+
+Print all permutations of a given string (with duplicates)
+fix each character one by one... swap(i..j), premute(i+1,j) swap back(i..j).. if j == len(str) print str
+if l==r:
+        print toString(a)
+    else:
+        for i in xrange(l,r+1):
+            a[l], a[i] = a[i], a[l]
+            permute(a, l+1, r)
+            a[l], a[i] = a[i], a[l] # backtrack
+T(n) = O(1) + T(N-1) +  O(1) === > T(N) = N-1 * N-2 * N-3 ... 1 ===> O(N!)..now in each call if base case matches we print a stainf which takes O(N)..so overal O(N * N!)..if you remove the printing out of func, it will be O(N!)
+2. We keep first character of the string and recursively call getAllPermutations on the remaining string.
+. When the function returns, we add the first character to all positions in all the strings that we got in the hashset.
+char first = str.charAt(0);
+        String remainingString = str.substring(1);
+        HashSet<String> words = getAllPermutations(remainingString);
+        for(String word: words) {
+            for(int i = 0; i <= word.length(); i++) {
+                String prefix = word.substring(0, i);
+                String suffix = word.substring(i);
+                permutations.add(prefix + first + suffix);
+            }
+        }
+http://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
+
+
+Word Break Problem Dynamic Programming
+Word Break Problem using Backtracking
+
+str.substr(i, j-i) means sub string starting from i and of length j-i.. so we canot be N in the end as tha will cause overflow..
+
+1. Recursive implementation:
+we consider each prefix and search it in dictionary. If the prefix is present in dictionary, we recur for rest of the string (or suffix). If the recursive call for suffix returns true, we return true, otherwise we try next prefix. If we have tried all prefixes and none of them resulted in a solution, we return false.
+int size = str.size();
+    // Base case
+    if (size == 0)  return true;
+    // Try all prefixes of lengths from 1 to size
+    for (int i=1; i<=size; i++)
+    {
+        // Then we recursively check for remaining string str.substr(i, size-i) which is suffix of length size-i
+        if (dictionaryContains( str.substr(0, i) ) &&  wordBreak( str.substr(i, size-i) ))
+            return true;
+    }
+
+3. backtracking
+We start scanning the sentence from left. As we find a valid word, we need to check whether rest of the sentence can make valid words or not. Because in some situations the first found word from left side can leave a remaining portion which is not further separable.
+for (int i=1; i<=n; i++)
+    {
+        //extract substring from 0 to i in prefix
+        string prefix = str.substr(0, i);
+
+        // if dictionary conatins this prefix, then we check for remaining string. Otherwise we ignore this prefix (there is no else for this if) and try next
+        if (dictionaryContains(prefix))
+        {
+            // if no more elements are there, print it
+            if (i == n)
+            {
+                // add this element to previous prefix
+                result += prefix;
+                cout << result << endl; //print result
+                return;
+            }
+            wordBreakUtil(str.substr(i, n-i), n-i,
+                                result + prefix + " ");
+        }
+
+3. DP: Create the DP table to store results of subroblems. The value wb[i]
+    will be true if str[0..i-1] can be segmented into dictionary words,
+     otherwise false.
+
+	if (wb[i] == false && dictionaryContains( str.substr(0, i) ))
+            wb[i] = true;
+	if (wb[i] == true)
+        {
+            // If we reached the last prefix
+            if (i == size)
+                return true;
+
+            for (int j = i+1; j <= size; j++)
+            {
+                // Update wb[j] if it is false and can be updated
+                // Note the parameter passed to dictionaryContains() is
+                // substring starting from index 'i' and length 'j-i'
+                if (wb[j] == false && dictionaryContains( str.substr(i, j-i) ))  // finding the break point.. basically j-i will be from length 1,2,3,4...i.e after prefix till i match es search for other matches from i+1 to N
+                    wb[j] = true;
+
+                // If we reached the last character
+                if (j == size && wb[j] == true)
+                    return true;
+            }
+        }
+4. create 2D table, start from length 1, fill upper half diagonal if 0..i is in dict , if present update -1 with i i.e the break point.. else search for breakpoint k from i to end which will make strik and str(k+1,j) both true...store k to str[i,j] in such case..Gives preference to longer words over splits
+     * e.g peanutbutter with dict{pea nut butter peanut} it would result in
+     * peanut butter instead of pea nut butter.
+for(int l = 1; l <= word.length(); l++){
+            for(int i=0; i < word.length() -l + 1 ; i++){
+                int j = i + l-1;
+                String str = word.substring(i,j+1);
+                //if string between i to j is in dictionary T[i][j] is true
+                if(dict.contains(str)){
+                    T[i][j] = i;
+                    continue;
+                }
+                //find a k between i+1 to j such that T[i][k-1] && T[k][j] are both true
+                for(int k=i+1; k <= j; k++){
+                    if(T[i][k-1] != -1 && T[k][j] != -1){
+                        T[i][j] = k;
+                        break;
+                    }
+                }
+            }
+        }
+        if(T[0][word.length()-1] == -1){
+            return null;
+        }
+5. T[0] = true;
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if(T[j] && set.contains(s.substring(j, i))) {
+                    T[i] = true;
+                    break;
+                }
+https://www.youtube.com/watch?v=WepWFGxiwRs
+http://www.geeksforgeeks.org/dynamic-programming-set-32-word-break-problem/
+http://www.geeksforgeeks.org/word-break-problem-using-backtracking/
+
+
+
+
+
+
+
+Check balanced parentheses in a string
+have a counter for both '(' and ')'.incremt when met and decremt when closing met..
+char ch = str.charAt(i);
+            if (ch == '(') {
+                count++;
+            } else if (ch == ')') {
+                if (count == 0)
+                    return false;
+                else
+                    count--;
+            }
+            i++;
+http://www.ideserve.co.in/learn/check-balanced-parentheses-in-a-string
+
+
+
+
+Group all anagrams together from a given array of strings | Set 1
+
+implement a comparator..A regular sort method on string array would put all strings in their increasing alphabetical/dictionary order. We change this order by implementing a custom comparator in which instead of comparing two strings 'S1' and 'S2' directly, we compare the sorted versions of 'S1' and 'S2'. This sorted version comparison makes sure that if 'S1' and 'S2' are anagrams of each other then they would be placed next to each other in sorted array (since custom compare method would return 0).
+Arrays.sort(strArray, new AnagramSort());
+ public String sortChars(String s)
+    {
+        char[] content = s.toCharArray();
+        Arrays.sort(content);
+        return new String(content);
+    }
+ 
+    @Override
+    // compares its two argument strings for order
+    public int compare(String s1, String s2)
+    {
+	// this only return -1,0,1 so even if I change the stirgn to char and sort them, it still after this function will place original s1,s2 based onthis resutl tot his func..so existing arry elem will o tbe srted..
+        return sortChars(s1).compareTo(sortChars(s2));
+    }
+Time Complexity is O(nlogn)
+Space Complexity is O(n)
+
+2. create a arry with sring and index tuple/structure obj... sort the string in each tuple.. then sort the entire array using string as key... then from the orignial array use sorted array string index to print it originly before sorting..
+	class Word(object):
+	    def __init__(self, string, index):
+	        self.string = string
+	        self.index = index
+
+	# Create a DupArray object that contains an array
+	# of Words
+	def createDupArray(string, size):
+	    dupArray = []
+
+    # One by one copy words from the given wordArray
+    # to dupArray
+    for i in xrange(size):
+        dupArray.append(Word(string[i], i))
+
+    return dupArray
+	for i in xrange(size):
+	        dupArray[i].string = ''.join(sorted(dupArray[i].string))
+
+	    # Step 3: Now sort the array of words in dupArray
+	    dupArray = sorted(dupArray, key=lambda k: k.string)
+
+    # Step 4: Now all words in dupArray are together, but
+    # these words are changed. Use the index member of word
+    # struct to get the corresponding original word
+    for word in dupArray:
+        print wordArr[word.index],
+http://www.geeksforgeeks.org/print-pairs-anagrams-given-array-strings/
+http://www.ideserve.co.in/learn/group-all-anagrams-together-set-1
+
+
+
+Sort to bring anagrams closer : Java version of above problem
+private static void sort(String[] arr)
+ {
+  List list=new ArrayList();
+  for(String str:arr)
+  {
+   list.add(new Anagram(str));
+  }
+  Collections.sort(list);
+  for(int i=0;i < arr.length;++i)
+  {
+   arr[i]=list.get(i).str;
+  }
+ }
+ public static class Anagram implements Comparable
+ {
+  String str;
+  public Anagram(String str)
+  {
+   this.str=str;
+  }
+  public String getSortedString()
+  {
+   char[]arr=str.toCharArray();
+   Arrays.sort(arr);
+   return new String(arr);
+  }
+  @Override
+  public int compareTo(Anagram o)
+  {
+   return getSortedString().compareTo(o.getSortedString());
+  }
+ }
+http://www.dsalgo.com/2013/03/sort-to-bring-anagrams-closer.html
+
+
+
+
+
+
+
+Find the first non-repeating character from a stream of characters
+https://www.geeksforgeeks.org/find-first-non-repeating-character-stream-characters/
+
+double linkedlist + hashtable. hash table maps the character to its pointer in linked list. Pointer NULL means duplicate.
+When a character arrives, if it is in the hash table (pointer not NULL), remove it from the linkedist and reset the pointer, otherwise insert it into hash table and the tail of linked list. When answering an query, return the first character in the double linked list.
+
+If repeated[x] is true, ignore this character (x is already repeated two or more times in the stream)
+If repeated[x] is false and inDLL[x] is NULL (x is seen first time). Append x to DLL and store address of new DLL node in inDLL[x].
+If repeated[x] is false and inDLL[x] is not NULL (x is seen second time). Get DLL node of x using inDLL[x] and remove the node. Also, mark inDLL[x] as NULL and repeated[x] as true.
+Note that appending a new node to DLL is O(1) operation if we maintain tail pointer. Removing a node from DLL is also O(1).
+
+inDLL = [] * MAX_CHAR
+
+# repeated[x] is true if x is repeated two or more times.
+# If x is not seen so far or x is seen only once. then
+# repeated[x] is false
+repeated = [False] * MAX_CHAR
+
+stream = "geeksforgeeksandgeeksquizfor"
+for i in xrange(len(stream)):
+    x = stream[i]
+    # We process this character only if it has not occurred or occurred only once. Repeated[x] is true if x is
+    # repeated twice or more.s
+    if not repeated[ord(x)]:
+        if not x in inDLL:
+            inDLL.append(x)
+        else:
+            inDLL.remove(x)
+            repeated[ord(x)] = True
+    if len(inDLL) != 0:
+        print str(inDLL[0])
+
+
+Given a string, find its first non-repeating character
+https://www.geeksforgeeks.org/given-a-string-find-its-first-non-repeating-character/
+
+NO_OF_CHARS = 256
+def getCharCountArray(string):
+    count = [0] * NO_OF_CHARS
+    for i in string:
+        count[ord(i)]+=1
+    return count
+
+count = getCharCountArray(string)
+    index = -1
+    k = 0
+
+    for i in string:
+        if count[ord(i)] == 1:
+            index = k
+            break
+        k += 1
+
+    return index
+
+We can augment the count array by storing not just counts but also the index of the first time you encountered the character e.g. (3, 26) for ‘a’ meaning that ‘a’ got counted 3 times and the first time it was seen is at position 26. So when it comes to finding the first non-repeater, we just have to scan the count array, instead of the string
+
+for (int i = 0; i < str.length();  i++) {
+     if(hm.containsKey(str.charAt(i))) {
+         hm.get(str.charAt(i)).incCount();
+     } else{
+ 		hm.put(str.charAt(i), new CountIndex(i));
+
+class CountIndex  {
+    int count,index;
+    public CountIndex(int index) {
+        this.count = 1;
+        this.index = index;
+    }
+    public void incCount() {
+        this.count++;
+    }
+
+
+ASCII_SIZE = 256
+count = [0] * ASCII_SIZE
+Typically, ASCII characters are 256, so we use our Hash array size as 256. But if we know that our input string will have characters with value from 0 to 127 only, we can limit Hash array size as 128. Similarly, based on extra info known about input string, the Hash array size can be limited to 26.
+Space Complexity: O(1) — Because we are using fixed space (Hash array) irrespective of input string size.
+
+
+Find the smallest window in a string containing all characters of another string
+1- First check if length of string is less than
+   the length of given pattern, if yes
+       then "no such window can exist ".
+2- Store the occurrence of characters of given
+   pattern in a hash_pat[].
+3- Start matching the characters of pattern with
+   the characters of string i.e. increment count
+   if a character matches
+4- Check if (count == length of pattern ) this
+   means a window is found
+5- If such window found, try to minimize it by
+   removing extra characters from beginning of
+   current window.
+6- Update min_length.
+7- Print the minimum length window.
+
+if (len1 < len2) {
+            System.out.println("No such window exists");
+            return "";
+        }
+        int hash_pat[] = new int[no_of_chars];
+        int hash_str[] = new int[no_of_chars];
+        for (int i = 0; i < len2; i++)
+            hash_pat[pat.charAt(i)]++;
+
+        int start = 0, start_index = -1, min_len = Integer.MAX_VALUE;
+        int count = 0;  // count of characters
+        for (int j = 0; j < len1 ; j++)  {
+            hash_str[str.charAt(j)]++;
+            if (hash_pat[str.charAt(j)] != 0 &&
+                hash_str[str.charAt(j)] <= hash_pat[str.charAt(j)] )
+                count++;
+            if (count == len2)
+            {
+                // Try to minimize the window i.e., check if
+                // any character is occurring more no. of times
+                // than its occurrence  in pattern, if yes
+                // then remove it from starting and also remove
+                // the useless characters.
+                while ( hash_str[str.charAt(start)] > hash_pat[str.charAt(start)]
+                       || hash_pat[str.charAt(start)] == 0)
+                {
+
+                    if (hash_str[str.charAt(start)] > hash_pat[str.charAt(start)])
+                        hash_str[str.charAt(start)]--;
+                    start++;
+                }
+
+                // update window size
+                int len_window = j - start + 1;
+                if (min_len > len_window)
+                {
+                    min_len = len_window;
+                    start_index = start;
+                }
+
+
+K’th Non-repeating Character
+How to find the character by only doing only one traversal of input string?
+
+Method 2 (O(n) but requires two traversals)
+Create an empty hash.
+Scan input string from left to right and insert values and their counts in the hash.
+Scan input string from left to right and keep count of characters with counts more than 1. When count becomes k, return the character.
+
+count[x] : Stores count of character 'x' in str.
+           If x is not present, then it stores 0.
+
+index[x] : Stores indexes of non-repeating characters
+           in str. If a character 'x' is not  present
+           or x is repeating, then it stores  a value
+           that cannot be a valid index in str[]. For
+           example, length of string.
+Initialize all values in count[] as 0 and all values in index[] as n where n is length of string.
+Traverse the input string str and do following for every character c = str[i].
+Increment count[x].
+If count[x] is 1, then store index of x in index[x], i.e., index[x] = i
+If count[x] is 2, then remove x from index[], i.e., index[x] = n
+Now index[] has indexes of all non-repeating characters. Sort index[] in increasing order so that we get k’th smallest element at index[k]. Note that this step takes O(1) time because there are only 256 elements in index[].
+
+count[i] = 0;
+index[i] = n;
+char x = str.charAt(i);
+++count[x];
+
+// If this is first occurrence, then set value
+// in index as index of it.
+if (count[x] == 1)
+    index[x] = i;
+
+// If character repeats, then remove it from
+// index[]
+if (count[x] == 2)
+    index[x] = n;
+Arrays.sort(index);
+return (index[k-1] != n)? index[k-1] : -1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

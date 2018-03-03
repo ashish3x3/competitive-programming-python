@@ -1,0 +1,57 @@
+
+breakpoints
+By breakpoints in the source code you specify where the execution of the program should stop. 
+
+
+watchpoints
+To stop the execution only if a field is read or modified, you can specify watchpoints . 
+
+
+Once the program is stopped you can investigate variables, change their content, etc.
+
+
+Setting Breakpoints
+
+To set breakpoints in your source code right-click in the small left margin in your source code editor and select Toggle Breakpoint. Alternatively you can double-click on this position. 
+
+
+sTART:
+to the calss containing main
+right click- debug as -jav application
+
+f you have not defined any breakpoints, this will run your program as normal. To debug the program you need to define breakpoints. 
+
+If you start the debugger, Eclipse asks you if you want to switch to the Debug perspective once a stop point is reached. Answer Yes in the corresponding dialog. 
+
+F5 	Executes the currently selected line and goes to the next line in your program. If the selected line is a method call the debugger steps into the associated code.
+
+F6 	F6 steps over the call, i.e. it executes a method without stepping into it in the debugger.
+
+F7 	F7 steps out to the caller of the currently executed method. This finishes the execution of the current method and returns to the caller of this method.
+
+F8 	F8 tells the Eclipse debugger to resume the execution of the program code until is reaches the next breakpoint or watchpoint. 
+
+
+ou can set a watchpoint by double-clicking on the left margin, next to the field declaration. In the properties of a watchpoint you can configure if the execution should stop during read access (Field Access) or during write access (Field Modification) or both. 
+
+
+
+ You can set breakpoints which are triggered when exceptions in your Java source code are thrown. To define an exception breakpoint click on the Add Java Exception Breakpoint button icon in the Breakpoints view toolbar.
+
+Exception Breakpoint
+
+You can configure if the debugger should stop at caught or uncaught exceptions.
+
+
+Method breakpoint
+
+A method breakpoint is defined by double-clicking in the left margin of the editor next to the method header.
+
+You can configure if you want to stop the program before entering or after leaving the method. 
+
+
+
+
+
+
+

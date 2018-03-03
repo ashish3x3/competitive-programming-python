@@ -1,0 +1,16 @@
+
+
+implement http://www.keithschwarz.com/binary-subsets/ algo in python
+add it to python codebase for competetive prog
+
+
+https://www.hackerrank.com/challenges/maximizing-xor/problem
+https://www.hackerrank.com/challenges/service-lane/problem
+
+Rotating a two-dimensional array in Python
+https://stackoverflow.com/questions/8421337/rotating-a-two-dimensional-array-in-python
+https://stackoverflow.com/questions/42519/how-do-you-rotate-a-two-dimensional-array
+http://www.geeksforgeeks.org/rotate-matrix-elements/
+https://artemrudenko.wordpress.com/2014/08/28/python-rotate-2d-arraymatrix-90-degrees-one-liner/
+https://codereview.stackexchange.com/questions/141689/rotate-matrix-using-python
+https://codereview.stackexchange.com/questions/98540/matrix-rotation-algorithm

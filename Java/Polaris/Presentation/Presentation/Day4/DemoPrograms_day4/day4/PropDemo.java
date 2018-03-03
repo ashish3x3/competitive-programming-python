@@ -1,0 +1,23 @@
+package com.demoprograms.day4;
+
+import java.util.*; 
+class PropDemo { 
+public static void main(String args[]) { 
+Properties capitals = new Properties(); 
+Set states; 
+String str; 
+capitals.put("Illinois", "Springfield"); 
+capitals.put("Missouri", "Jefferson City"); 
+capitals.put("Washington", "Olympia"); 
+capitals.put("California", "Sacramento"); 
+capitals.put("Indiana", "Indianapolis"); 
+// Show all states and capitals in hashtable. 
+states = capitals.keySet(); // get set-view of keys 
+Iterator itr = states.iterator(); 
+while(itr.hasNext()) { 
+str = (String) itr.next(); 
+System.out.println("The capital of " + str + " is " + capitals.getProperty(str)+ "."); 
+} 
+ 
+} 
+}

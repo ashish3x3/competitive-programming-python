@@ -1,0 +1,54 @@
+
+
+N Queen Problem
+
+for (col = 0; col < n; col++) {
+            boolean foundSafe = true;
+
+            //check if this row and col is not under attack from any previous queen.
+            for (int queen = 0; queen < row; queen++) {
+                if (positions[queen].col == col || positions[queen].row - positions[queen].col == row - col ||
+                        positions[queen].row + positions[queen].col == row + col) {
+                    foundSafe = false;
+                    break;
+                }
+            }
+            if (foundSafe) {
+                positions[row] = new Position(row, col);
+                if (solveNQueenOneSolutionUtil(n, row + 1, positions)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+https://www.youtube.com/watch?v=xouin83ebxE
+http://webcache.googleusercontent.com/search?q=cache:http://www.geeksforgeeks.org/backtracking-set-3-n-queen-problem/&gws_rd=cr&dcr=0&ei=Yf-pWZ7UO8TGvgTLp66IDg
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

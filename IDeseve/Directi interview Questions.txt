@@ -1,0 +1,142 @@
+
+
+
+google-interview-questions2
+https://www.careercup.com/question?id=5084838654640128
+
+
+
+https://www.careercup.com/question?id=2665
+https://www.careercup.com/question?id=17871697
+Amazon Interview Question for SDE1s,Microsoft Interview Question for Software Engineer
+
+https://stackoverflow.com/questions/13258144/find-the-index-in-the-circle-such-that-a-traveler-can-completes-one-round
+
+1. Find difference between petrol and distance (i.e. p_i - d_i) of all stations 
+2. For each positive number as starting bunk, sum the differences of n stations. 
+2.a. If at any point the sum becomes less than zero, start over with the next positive number 
+2.b. If the sum becomes zero when the last difference is added, we got the starting stations 
+
+Step 2 has complexity O(n^2)
+===
+Step 1 : At each petrol pump , do the calculation (petrol - distance). This number will be either +ve, -ve or zero. 
+
+Step 2: Now find the sequence whose sum is maximum. Can be done in O(n) 
+
+Step 3: The start point of this longest sum sequence will be the point from which we should start.
+
+
+
+4. tel me a scenario where i cud use MERGE SORT AND QUICK SORT AND WHERE I CAN 
+USE ONE NOT THE OTHER.. and the differences...
+MERGE SORT:
+when there is 1GB of things to be solved we can divide that 1 GB into A*B=1GB , such that 
+each division will have a size of A(MBs)... in this case I cannot bring the entire 1GB into 
+memory.. So i ll bring A(MB) into memory at a time sort it and keep it and sort all the B 
+divisions and do a B­WAY Merge... which will be easier... But this kinda thing cant be done in 
+quick sort...
+Quick SORT:
+if we want to find the Kth smallest v can use quick sort without sorting the entire array but its 
+enuogh.. till the pivot element is placed at the kth position... (random select...)...... this cant be 
+applied for merge sort..where v have to sort the entire thick to identify.. kth smallest...
+
+
+
+There is a drought situation in Agrabah.King got worried and called Aladdin for helping him out. 
+As he is a modern Aladdin he took printouts of places around Agrabah from google maps.For 
+analyzing the map properly, he converted the map into a M x N grid. Each point is represented 
+by either ‘0’ or ‘1’.
+‘1’ represents the unit area of water and ‘0’ represents the unit area of land. King told him to find 
+the largest continuous patch of water so that he can send his people over there.
+As our Aladdin is modern, but not a good programmer, he wants your help. Help him out by 
+printing out the largest area water patch available on map.
+
+
+
+There are three types of balls arranged linearly in a random order Red, Green and Blue. Now 
+your job is to sort them so that the Red balls are in front follwed by the Green balls and the Blue 
+balls are pushed to the bask.
+This problem was the same as sorting the array of 0, 1 and 2. we  can do this in o(n) 
+using two pointers.
+
+
+Given an n x n matrix, where every row and column is sorted in increasing order. Given a 
+number x, how to decide whether this x is in the matrix. The designed algorithm should have 
+linear time complexity.
+a) Start with top right element
+b) Loop: compare this element e with x
+ i) if they are equal then return its position
+ ii) e < x then move it to down (if out of bound of matrix then break return false)
+ iii) e > x then move it to left (if out of bound of matrix then break return false)
+c) repeat the i), ii) and iii) till you find element or returned false
+
+
+
+In the same matrix mentioned above find the kth maximum element.
+I said that we just need to compare the last K x K sub matrix and to find the Kth element.
+https://stackoverflow.com/questions/15179536/kth-smallest-element-in-sorted-matrix
+O(k log(k)) solution.
+
+Build a minheap.
+Add (0,0) to the heap. While, we haven't found the kth smallest element, remove the top element (x,y) from heap and add next two elements [(x+1,y) and (x,y+1)] if they haven't been visited before.
+We are doing O(k) operations on a heap of size O(k) and hence the complexity.
+
+
+
+
+Given a set of integers, Display the non­empty subsets whose sum is zero. For example, 
+given the set { −7, −3, −2, 5, 8}, the answer is the subset { −3, −2, 5} which  sums to zero.
+This is the special case of knapsack problem and hence it is NP­Complete so i said we 
+cannot find the solution in polynomial time.We consider all the subsets with k elements. Then 
+check how many of these sets have a sum of 0. This is an exponential time algorithm.
+
+
+
+
+
+
+
+***********************************************************************
+
+ if threads have more advantages y go for process??
+Semaphores, Synchronization, concurrency problems, 
+Second chance algorithm in virtual 
+memory chapter
+
+
+DBMS: Second highest salary… TRY TO USE TOP… I TOLD HIM TWO SOLUTIONS ONE 
+WITH TOP AND OTHER WITHOUT TOP …
+
+Indexing was also an important concept he asked me.. B+ trees properties and how used in DB.
+
+Normalization of my tables in my project….
+
+Difference between binary trees,  hash map, Tries.
+
+runtime of each
+
+A scenario where BST has advantages than hash map without any collision.
+
+How do we avoid collision in hash
+
+Example of a good hash being used : Java hash map…..that was the right answer
+
+Tries advantages and wen can it be used….and application of it..
+
+
+Layers of OSi.. explanation of each layer 
+Google.com steps involved
+About DNS
+
+
+What do u know about testing…
+I explained back and white box testing… alpha n beta testing.
+
+
+Difference in greedy n dynamic… which is better….
+
+
+***********************************************************************
+
+
+

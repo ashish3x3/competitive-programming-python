@@ -1,0 +1,448 @@
+
+
+Runtime Analysis of Trees:
+http://cs.nyu.edu/courses/spring04/V22.0102-002/time.html
+
+The algorithm is based on a simple idea that any binary tree could be uniquely represented by using in-order and pre-order traversal. 
+
+
+Find maximum element from each sub-array of size 'k'| Set 1
+1. O(nK) run sliding window concept ..0  to n-k+1..and for each 1..k...
+2. self balancing BST(AVL) of size K... first of size k and the from k+1 .. n-k+1 and keep updating tree by deleting node at arr[i] from tree and inserting arr[i+k].. print maxIn tree after each... O(nlogK)..logK for each tree operation in self balancing BST
+3. Dequie.. check.python impl in folder trees collection.deque
+http://www.ideserve.co.in/learn/maximum-element-from-each-subarray-of-size-k-set-1
+AVL tree: https://www.youtube.com/watch?v=YKt1kquKScY
+
+
+Level Order Tree Traversal(BFS) without Queue
+for each depth from 1 to height, print node.left,right at that depth. recursive.printGivenLevel(root , level(level in range(1, height+1)))
+http://www.geeksforgeeks.org/level-order-tree-traversal/
+
+
+
+Spiral Level Order Traversal of a Binary Tree | Set 1
+Use 2 stacks, strackEven and StackOdd for evn and odd level travs=versal. Right toi left for even and vice versa.level 0 is root.
+http://www.ideserve.co.in/learn/spiral-level-order-traversal-of-a-binary-tree-set-1
+
+
+
+Spiral Level Order Traversal of a Binary Tree | Set 2
+use preorder and recursion. for each depth print node at that depth using pre order traversal. use even and oddd level concept for left to right and right ot left traversal. 0 is root.
+http://www.ideserve.co.in/learn/spiral-level-order-traversal-of-a-binary-tree-set-2
+
+
+AVL Tree:
+self height balancing BST
+https://www.youtube.com/watch?v=YKt1kquKScY
+
+
+Time and Space Complexity of Recursive Algorithms
+To conclude, space complexity of recursive algorithm is proportinal to maximum depth of recursion tree generated. If each function call of recursive algorithm takes O(m) space and if the maximum depth of recursion tree is 'n' then space complexity of recursive algorithm would be O(nm).
+http://www.ideserve.co.in/learn/time-and-space-complexity-of-recursive-algorithms
+
+
+https://www.nayuki.io/page/sliding-window-minimum-maximum-algorithm
+
+
+
+Diagonal Sum of a Binary Tree.
+use horizonatl distace concept, when go rith no increment but when go left fro a node, icrease by 1. use hachmap to store the diagonal number(which is horizonatl distance) and its value.. use inorder trabversal left, root, right with modification passing Horizontal distance
+
+2 stack concept is also promisong, push one right child in another stack and left in another stack and keep suming both stack after another..not sure of edge cases 
+http://www.ideserve.co.in/learn/diagonal-sum-of-a-binary-tree
+
+
+Lowest Common Ancestor of two nodes in a Binary Search Tree/Binary Tree
+by storing path1,path 2 and finding first mismatch..preassumes that both n1,n2 i spresent..not alwasy the case
+recuresive way in BST checking if both n1,n2 is less than root, or greate than root, or this current is the LCA..i.e one is greater and other is smaller..
+thired way by haveing v0,v1 to store if n1,n2 is found or not in search..then checking again after LCA is retuenrd, that wheter n1/n2 is a child of LCA returned.read below.. 
+find LCA(y1,y2) consodering both are present
+						and consdering y2 is not present ,,U l get he code..
+						why theere is additional check to see if find(lca,n2) is there or not.
+						why we check in LCA returend and not full tree bcz we already know by the time code CLSUtil return that n2 is not predent in any common node, so it might be presnt below the first match node of y1/y2..so we check if n1 is found and whether n2 is presnt in tree rooted t LCA returned, i.e find(LCA,n2) and vice versa..
+http://www.geeksforgeeks.org/lowest-common-ancestor-binary-tree-set-1/
+
+
+
+
+
+Populate right neighbors for all nodes in a binary tree
+1. First we populate 'neighbor for left child of current node'. If current node's left child is not null then 
+1a. If 'right child of current node' is not null then we make 'right child of current node' as the neighbor of left child of current node.
+1b. If 'right child of current node' is null then we need to find the first non-null node after the left child at left child's level and make that node as left child's neighbor. 
+http://www.ideserve.co.in/learn/populate-right-neighbors-in-a-binary-tree
+
+
+
+Find the size of largest BST in a binary tree
+go bottom up manner, if 1 node is bst, check both right,left from 1,1 to 2nd level and go up... condition currNode.data > maxFrom(LST) and currNode.data < minFrom(RST) 
+1.The basic idea used here is that for a tree with root as currentNode to be a valid BST, it's left and right sub-trees have to be valid BSTs, value of currentNode has to be  greater than the maximum valued node from its left sub-tree and value of currentNode has to be less than the minimum valued node from its right sub-tree.
+
+Method 1: One of the naive approaches to solve this problem could be that 1. Check if tree with current node as root is a valid BST and if it is then return its size. 2. If tree with current node as its root is not a valid BST, then make recursive calls to left and right sub-trees and return the maximum of values returned by these recursive calls. Condition for valid BST could be checked by creating inorder array and checking if it is sorted. 
+
+The worst case time complexity of above algorithm is O(n^2) which occurs when the binary tree is skewed one with each node having only right child which is less than its parent.
+
+http://www.ideserve.co.in/learn/size-of-largest-bst-in-binary-tree
+
+
+
+Remove the nodes of binary search tree which are outside the given range
+
+Generally when there is deletion of nodes involved in a binary tree, post-order traversal is used
+In this algorithm, after correcting left and right sub-trees of current node using recursive calls, we check the value of currentNode itself to see if it is in the given range['min' - 'max']. If it is in the correct range we return the reference of currentNode without doing anything. If we find that value of currentNode is less than 'min' limit then we need to simply return the reference of right child of currentNode to the calling function. This is because in this case all nodes in currentNode's left sub-tree would have had value less than min and therefore they would have already been deleted(remember we are using post-order traversal).
+// correct left and right sub-trees first
+        currentNode.left  = removeOutOfRangeNodes(currentNode.left, min, max);
+        currentNode.right = removeOutOfRangeNodes(currentNode.right, min, max);
+         
+        /*
+         * if currentNode's value is less than min threshold, it's left sub-tree would already be null
+         * simply return reference to right sub-tree
+         */
+        if (currentNode.data < min // currentNode.data > max)
+        {
+            return currentNode.right; return currentNode.left;
+        } 
+        return currentNode;
+http://www.ideserve.co.in/learn/remove-out-of-range-bst-nodes
+
+
+
+To conclude, space complexity of recursive algorithm is proportinal to maximum depth of recursion tree generated. If each function call of recursive algorithm takes O(m) space and if the maximum depth of recursion tree is 'n' then space complexity of recursive algorithm would be O(nm).
+
+
+
+Remove all the half nodes from a given binary tree
+Generally when there is deletion of nodes involved in a binary tree, post-order traversal is used
+Finally when left and right sub-trees are modified for currentNode, check if currentNode's left child is null with right child being non-null value. If this is the case then we need to delete currentNode. We do that by returning currentNode's right child to its parent and making currentNode as null.
+currentNode.left  = removeHalfNodes(currentNode.left);
+        currentNode.right = removeHalfNodes(currentNode.right);
+         
+        if (currentNode.left == null && currentNode.right != null) // currentNode.right == null && currentNode.left != null
+        {
+            currentNode = currentNode.right;  // currentNode = currentNode.left;
+        }  
+        return currentNode;
+http://www.ideserve.co.in/learn/remove-all-half-nodes-binary-tree
+
+
+
+
+Check if all internal nodes of BST have only one child without building tree
+1. O(N^2).. for each i check if i+1 to ned is all smaller or allgreater than i
+2.O(N)... check from last, and maintain min,max so far, preOrder[i] has to be either smaller or greatethen min/max... {9, 8, 5, 7, 6} will pass, {8, 5, 4, 7, 6} will fail, as 4 fraom last will not be smaller than minSofar(6) and neither greater thanmaxSoFar(7)..
+http://www.ideserve.co.in/learn/check-if-all-internal-nodes-have-one-child-bst
+
+
+
+
+Convert binary tree to binary search tree
+It creates the inorder traversal array of a given binary tree.
+2. Then it sorts the created inorder array.
+3. Now it again traverses given binary tree in inorder fashion and simultaneously it traverses sorted inorder array. At each node visit of binary tree, the value of that node is changed to corresponding element in the inorder array. That is value of first node visited during inorder traversal is changed to value of element at 0th index in sorted inorder array, value of second node visited during inorder traversal is changed to value of element at 1st index and so on.
+http://www.ideserve.co.in/learn/convert-binary-tree-to-binary-search-tree
+
+
+
+Check if two binary search trees are identical given their array representations
+
+Check if size of array1 is equal to size of array2. If not then the BSTs constructed would definitely be different and hence return false.
+2. Check if size of both arrays is 0. If it is then BSTs constructed from both arrays would be null BSTs and hence return true.
+
+The idea is to look for the element in both given arrays which would be used to construct the same part of the trees.
+For example, given two arrays {3,5,4,6,1,0,2} and {3,1,5,2,4,6,0}; in both of these arrays element 3 would be used to construct the root of the tree. Now in both of these arrays, if we search for an element which would be used to construct the root of the right sub-tree of node '3' then that element would turn out to be 5. The reason for this is that both of these arrays, element 5 is the first element found which is greater than 3. Similarly, if we search for an element which would be used to construct the root of the left sub-tree of node '3', that element would be 1. This is because element 1 is the first element found in both of these arrays which is less than 3. Until this point we know that for both of these BSTs - root 3, and it's left and right sub-tree roots(node 1 and node 5 respectively) are same.
+Using this ides we check for equality of elements in two arrays corresponding to identical parts of the BSTs and we check this for all possible parts of BSTs using recursion. 
+if (arrayForTree1[i] == arrayForTree2[j])
+        {
+            return (checkIfSameBSTs(arrayForTree1, arrayForTree2, i+1, j+1, min, arrayForTree1[i]) &&
+                    checkIfSameBSTs(arrayForTree1, arrayForTree2, i+1, j+1, arrayForTree1[i], max));
+        }
+http://www.ideserve.co.in/learn/check-if-identical-binary-search-trees-without-building-them-set-1
+
+
+
+
+
+
+Find floor and ceiling of an element from given dataset using binary search tree
+simple bst search to find.. if reach null return none from lst/r on whether U r finding floor/ceil...fi rst/lst return none, it means currenmt value is floor/ceil.. 
+floor will be searched on LST heavy, ceil on rst heavy..
+else if (currentNode.data < key)
+        {
+            ceiling = getCeiling(currentNode.right, key);
+        }
+         
+        // if currentNode is greater than key, then we first search for ceiling in the left sub-tree
+        // if not found then the currentNode must be the ceiling for this key
+        else
+        {
+            ceiling = getCeiling(currentNode.left, key);
+            if (ceiling == INVALID_VALUE)
+            {
+                ceiling = currentNode.data;
+            }
+        }
+http://www.ideserve.co.in/learn/floor-ceiling-using-binary-search-tree
+
+
+
+
+Check if a binary tree is sub-tree of another binary tree in space O(1)
+1.O(N^2) ... recursive checking each node as starting node with small tree... two func IsSubTree(r.left,r.right..with smallTreeFull..) which will call completeMatch(BigtreeNewRoot, smalltreeMainRoot) 
+2. O(N)... using inorder and preorder and match if both matches.. can use KNP to search for a substring in string in O(N)..space in O(N) for diff array InoredBig,preOrdBig,etc
+http://www.ideserve.co.in/learn/check-if-a-binary-tree-is-subtree-of-another-binary-tree-space-optimized
+
+
+Check if a binary tree is sub-tree of another binary tree in time O(n)
+The algorithm is based on a simple idea that any binary tree could be uniquely represented by using in-order and pre-order traversal.
+Find inorder traversals of 'smallTree' and 'bigTree'. Store them is string inorderForSmallTree and inorderForBigTree respectively.
+2. Find preorder traversals of 'smallTree' and 'bigTree'. Store them is string preorderForSmallTree and preorderForBigTree respectively. 
+The time complexity of this algorithm is O(n) since traversal string could be formed in O(n) time and using KMP algorithm substring check could also be done in O(n) time; though for simplicty in the implementation we have used in-built java string API for substring check.
+return preorderForBigTree[0].contains(preorderForSmallTree[0]);
+http://www.ideserve.co.in/learn/check-if-a-binary-tree-is-subtree-of-another-binary-tree-time-optimized
+
+
+
+Check if two nodes are cousins in a Binary tree
+Condition for cousins: 
+     * 1: Given nodes are not siblings.
+     * 2: Given nodes should be on the same level.
+     return (!isSibling(a, b) && getLevel(a) == getLevel(b));
+http://www.ideserve.co.in/learn/check-if-two-nodes-are-cousins-binary-tree
+
+
+
+
+Print all nodes of a binary tree that do not have sibling
+This is a simple problem solved using traversal of the tree. We can use any traversal method and while traversing we need to check if a node has only one child. If it does then we need to print that out.
+http://www.ideserve.co.in/learn/print-nodes-of-binary-tree-without-sibling
+
+
+
+Remove all nodes which lie on path having sum less than k
+While traversing down we pass sum as a parameter which is the sum of all the nodes on the current path including the current node.
+Recursively traverse left and right subtrees passing the sum. 
+Once we reach a leaf node, we check if its path sum is less than k. If it is, then return null.
+int[] ls = new int[1];
+        int[] rs = new int[1];
+        ls[0] = rs[0] = sum[0] + node.data;
+ 
+        node.left = deleteKLessPath(node.left, ls, k);
+        node.right = deleteKLessPath(node.right, rs, k);
+ 
+        sum[0] = ls[0] > rs[0] ? ls[0] : rs[0];
+        if (sum[0] < k) {
+            node = null;
+http://www.ideserve.co.in/learn/remove-all-nodes-which-lie-on-path-having-sum-less-than-k
+
+
+
+Check if a given binary tree is symmetric tree or not
+
+For given two trees, if both trees are empty then they are mirror images of one another.
+Else they have to satisfy following conditions:
+2. Root values of both trees have to be same.
+3. Left sub-tree of tree1 should be mirror image of right sub-tree of tree2.
+4. Right sub-tree of tree1 should be mirror image of left sub-tree of tree2.
+return isSymmetric(root, root);
+if (isSymmetric(root1.left, root2.right)) return isSymmetric(root1.right, root2.left);
+http://www.ideserve.co.in/learn/check-if-binary-tree-is-symmetric-tree
+
+
+
+
+Check if the given n-ary tree is symmetric tree or not
+Idea is same as binary just this is instead of left,right child pointer it has children arrray as n array can have many child from a noed
+Root values of both trees have to be same and Sub-tree rooted at the first position should be mirror image of sub-tree rooted at the last position, sub-tree rooted at second position should be mirror image of the sub-tree rooted at second last-position and so on.
+class TreeNode 
+    { private int data; ArrayList<TreeNode> children;
+        public TreeNode(int data)  { this.data = data; children = new ArrayList(); }
+    }
+    int i = 0, j = root2.children.size() - 1;
+    while ((i < root1.children.size()) && (j >= 0))
+    { if (!checkSymmetry(root1.children.get(i), root2.children.get(j))) {
+            break;
+        }
+        i++; j--;
+http://www.ideserve.co.in/learn/check-if-n-ary-tree-is-symmetric-tree
+
+
+
+
+
+
+Convert a binary tree to its mirror tree
+Post order traversal..Boundary condition: If root is null, then return.
+Recursive step: Recursively convert left and right sub trees to their mirror.
+Actual conversion to mirror: Swap left and right sub trees of the current node.
+	convertToMirror(root.getLeft());
+	convertToMirror(root.getRight());
+	TreeNode t = root.getLeft();
+	root.setLeft(root.getRight());
+	root.setRight(t);
+http://www.ideserve.co.in/learn/mirror-a-tree
+
+
+Convert the given n-ary tree to its mirror image
+The idea is to use a traversal similar to post-order traversal for converting a given n-ary tree into its mirror image.
+first we convert all sub-trees rooted at child nodes of root to their mirror images(by making recursive calls) and then reverse the order of child nodes themselves.
+for (int i = 0; i < root.children.size(); i++)
+        {
+            convertToMirror(root.children.get(i));
+        }
+         
+        // now reverse the order of child nodes
+        Collections.reverse(root.children);
+http://www.ideserve.co.in/learn/mirror-of-n-ary-tree
+
+
+
+
+
+
+Find sum of all left leaves of a binary tree
+any traversal..preorder,posst, and check if node is a leaf node..and add the val to sum[0]
+if (currentNode.left == null && currentNode.right == null)
+        {
+            return true;
+        }
+
+if (isLeafNode(currentNode.left))
+        {
+            leftLeavesSum[0] += currentNode.left.val;
+        }
+         
+        findLeftLeavesSum(currentNode.left, leftLeavesSum);
+        findLeftLeavesSum(currentNode.right, leftLeavesSum);
+http://www.ideserve.co.in/learn/find-sum-of-all-left-leaves-binary-tree
+
+
+
+
+
+Find depth of deepest odd level leaf node
+/*
+     * Create a sample tree
+     *
+     *         1
+     *       /   \
+     *      2     3
+     *           /  \  
+     *          4    5
+     *         /      \
+     *        6        7
+     *         \      /  
+     *          8    9    
+     *              /
+     *             10
+     *
+     */
+ Traverse the tree and keep track of current level of the node.
+Current level of a node can be easily tracked by maintaining a variable 'currLevel'. Level of Root node is 1. Increment 'currLevel' while traversing for left and right subtrees. 
+While traversing:
+1: If root is null, return 0.
+2: Else if we find a leaf node and the current level is odd, return the current level.
+3: Else return maximum of (maximum depth of odd level leaf node found in left subtree, maximum depth of odd level leaf node found in right subtree).
+if (root.left == null && root.right == null && ((currLevel & 1) != 0))
+            return currLevel;
+        return Integer.max(depthDeepestOddLevelLeafNode(root.left, currLevel + 1), depthDeepestOddLevelLeafNode(root.right, currLevel + 1));
+    
+http://www.ideserve.co.in/learn/depth-of-deepest-odd-level-leaf-node
+
+
+
+
+
+Construct the binary tree from its parent array representation
+
+in a nutshell all the value int the array is the parent of its index..
+index  =   0  1  2   3  4  5  6
+parent = [ 3, 5, 0, -1, 5, 3, 0 ]  ... 3 is parent of 0, 5 is parent of 1, 0 is parent of 2...
+/*
+                                3
+                           0         5
+                         2   6     1   4
+        */
+1. O(N^2) ... topDown Approach .. find -1 in array, we create a node with value rootIndex and mark node as root.. thne we call recursive func constructTreeTopDownRec(currentNode = root, index = rootIndex, parentArray = parent) which searches for elements with value rootIndex in parent array.If such elements are found, then it creates nodes out of the found indices, makes them children of the root and constructs sub-trees rooted at these created nodes(children) by making recursive calls. The base case of this recursive function constructTreeTopDownRec(currentNode, index, parent) occurs when it can't find elements with value 'index' in parent array. This implies that the currentNode is leaf node and therefore it does not have any sub-trees rooted at itself.
+O(n^2) since for constructing 'n' nodes, parent array has to be scanned 'n' times.
+if (parent[i] == -1) { rootIndex = i; break; }
+constructTreeTopDownRec(root, rootIndex, parent);
+		if (currentNodeValue == parent[i])
+            { if (indexFirstChild == -1) { indexFirstChild = i; }
+                else { indexSecondChild = i; break; }
+            }
+		// create left child and left sub-tree rooted at left child 
+		currentNode.left = new TreeNode(indexFirstChild);
+        constructTreeTopDownRec(currentNode.left, indexFirstChild, parent);
+         
+        // if right child found then create node for it
+        // then create right sub-tree rooted at right child 
+        if (indexSecondChild != -1) {
+            currentNode.right = new TreeNode(indexSecondChild);
+            constructTreeTopDownRec(currentNode.right, indexSecondChild, parent);
+        }
+
+2. O(N).. bottom up approach ..Create a 'constructed' array of size same as that of parent array. constructed[i] stores the reference to the node with value i. 
+now we construct each i(0. to const.lenth) of constructed aray.. and call constructNode(i, constructed, parent)..
+this func call recursively itself with constructNode(parent[i], constructed, parent), till it reached root where it breks the recursion and create a node iwth root index and set const[i] = new node(rootIndex) and root = const[i]..return... after this index i which called parent[i] recursion create a node for itsef i.. and then assignment to left/right child of parent[i] happenns whiever is null... 
+if (constructed[parent[i]] != null) { // sanity check
+            if (constructed[parent[i]].left == null) {
+                constructed[parent[i]].left = constructed[i]; }
+            else {
+                constructed[parent[i]].right = constructed[i]; }
+        }
+        TreeNode[] constructed = new TreeNode[parent.length]; 
+        for (int i = 0; i < constructed.length; i++)
+        { constructNode(i, constructed, parent);
+        }
+        return root;
+ root will get create first by recursivly calling parent and chekcing if cons[parenti] is null or not...like 2-->0-->3...
+
+http://www.ideserve.co.in/learn/construct-binary-tree-from-parent-array
+
+
+
+Find height of the binary tree from its parent array representation
+similar to approach 2 of above creating tree from parent array.. we have height[i] array yhat will fill the height of the node with value i... here we make root node as height 1 and recursivly incremtn by 1+height[parent[i]]..in  the end we scan height array for the max value..
+if (parent[i] == -1)
+        {height[i] = 1;return;}
+        // first compute the height for the parent node
+        if (height[parent[i]] == INVALID_HEIGHT){
+            computeHeight(parent[i], height, parent);}
+        // now compute the height of the current node using height of its parent node
+        if (height[parent[i]] != INVALID_HEIGHT) { // sanity check
+            height[i] = 1 + height[parent[i]]; }
+http://www.ideserve.co.in/learn/find-height-of-binary-tree-from-parent-array
+
+
+
+
+
+Binary Search tree | Insertion and Search
+http://www.ideserve.co.in/learn/binary-search-tree-insertion
+
+
+
+
+Check if a binary tree is balanced or not
+if (currentNode == null) 
+        { return 0; }
+        // check if left sub-tree is balanced
+        int leftSubtreeHeight = checkBalance(currentNode.left);
+        if (leftSubtreeHeight == -1) return -1;
+		if (Math.abs(leftSubtreeHeight - rightSubtreeHeight) > 1)
+        { return -1; }
+http://www.ideserve.co.in/learn/check-if-a-binary-tree-is-balanced
+
+
+
+Remove duplicates from infinite integers
+We will use binary search tree to have a O(n log n) solution. Each number is inserted into an inner binary search tree and if no previous existence found, it is added to output stream. The output iterator always prepare the next element beforehand so that hasNext and next does not disagree. When the input iterator finishes so does the output. This has worst case complexity of O(n^2) for a sorted input sequence, we can improve this by any of the balanced search tree like red black tree.
+
+
+
+
+
+
+
+
+
